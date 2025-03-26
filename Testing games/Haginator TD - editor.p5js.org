@@ -1,0 +1,329 @@
+// Haginator TD - Tower Defense Game
+
+let towers = [];
+let enemies = [];
+let money = 200;
+let round = 1;
+let enemiesInRound = 20;
+let enemiesRemaining = 0;
+let enemySpawnRate = 60;
+let spawnTimer = 0;
+let score = 0;
+let lives = 100;
+let selectedTower = "Arrow Tower";
+let gameOver = false;
+
+// Path waypoints
+let path = [
+  {x: 0, y: 100},
+  {x: 100, y: 100},
+  {x: 100, y: 300},
+  {x: 400, y: 300},
+  {x: 400, y: 100},
+  {x: 600, y: 100}
+];
+
+let towerTypes = {
+  "Arrow Tower": { cost: 100, range: 100, damage: 5, color: 'blue' },
+  "Canon Tower": { cost: 150, range: 120, damage: 10, color: 'gray' },
+  "Poison Tower": { cost: 200, range: 80, damage: 3, color: 'green' },
+  "Ice Tower": { cost: 175, range: 90, damage: 4, color: 'cyan' },
+  "Fire Tower": { cost: 250, range: 100, damage: 7, color: 'red' }
+};
+
+let enemyTypes = [
+  { type: "Normal", speed: 1, health: 20, reward: 10, color: 'red' },
+  { type: "Fast", speed: 2, health: 10, reward: 8, color: 'yellow' },
+  { type: "Immune", speed: 0.8, health: 15, reward: 12, color: 'purple', immuneTo: "Poison Tower" },
+  { type: "Strong", speed: 1.2, health: 30, reward: 15, color: 'black' }
+];
+
+function setup() {
+  createCanvas(800, 500);
+  textSize(16);
+  noStroke();
+}
+
+function draw() {
+  if (gameOver) {
+    drawGameOver();
+    return;
+  }
+  
+  background(51);
+  
+  drawPath();
+  displayUI();
+  
+  if (enemiesRemaining > 0 || enemies.length > 0) {
+    spawnEnemies();
+    updateEnemies();
+  } else if (!gameOver) {
+    startNewRound();
+  }
+  
+  updateTowers();
+  drawTowers();
+  drawEnemies();
+}
+
+function drawPath() {
+  // Draw path
+  fill(139, 69, 19);
+  beginShape();
+  for (let p of path) {
+    vertex(p.x, p.y);
+  }
+  vertex(width, path[path.length-1].y);
+  vertex(width, height);
+  vertex(0, height);
+  endShape(CLOSE);
+  
+  // Draw start marker
+  fill(0, 255, 0);
+  ellipse(path[0].x, path[0].y, 30, 30);
+  fill(0);
+  text("START", path[0].x - 25, path[0].y - 20);
+  
+  // Draw end marker
+  fill(255, 0, 0);
+  rect(path[path.length-1].x - 15, path[path.length-1].y - 30, 30, 40);
+  fill(0);
+  text("END", path[path.length-1].x - 15, path[path.length-1].y - 40);
+}
+
+function keyPressed() {
+  const keys = ['1', '2', '3', '4', '5'];
+  const towerNames = Object.keys(towerTypes);
+  for (let i = 0; i < keys.length; i++) {
+    if (key === keys[i] && i < towerNames.length) {
+      selectedTower = towerNames[i];
+      return;
+    }
+  }
+}
+
+function mousePressed() {
+  if (mouseButton === LEFT) {
+    if (money >= towerTypes[selectedTower].cost) {
+      towers.push(new Tower(mouseX, mouseY, selectedTower));
+      money -= towerTypes[selectedTower].cost;
+    }
+  } else if (mouseButton === RIGHT) {
+    // Sell tower logic
+    for (let i = towers.length - 1; i >= 0; i--) {
+      let tower = towers[i];
+      let d = dist(mouseX, mouseY, tower.x, tower.y);
+      if (d < 20) { // Clicked on a tower
+        money += floor(towerTypes[tower.type].cost * 0.5); // 50% refund
+        towers.splice(i, 1);
+        break;
+      }
+    }
+  }
+}
+
+class Tower {
+  constructor(x, y, type) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.range = towerTypes[type].range;
+    this.damage = towerTypes[type].damage;
+    this.color = towerTypes[type].color;
+  }
+  
+  attack() {
+    for (let enemy of enemies) {
+      let d = dist(this.x, this.y, enemy.x, enemy.y);
+      if (d < this.range) {
+        if (!enemy.immuneTo || enemy.immuneTo !== this.type) {
+          enemy.health -= this.damage;
+        }
+      }
+    }
+  }
+  
+  draw() {
+    fill(this.color);
+    // Draw tower base
+    rect(this.x - 15, this.y - 5, 30, 10);
+    // Draw tower top
+    triangle(
+      this.x - 10, this.y - 5,
+      this.x + 10, this.y - 5,
+      this.x, this.y - 20
+    );
+    // Draw safe range indicator
+    noFill();
+    stroke(0, 255, 0, 50);
+    ellipse(this.x, this.y, this.range * 2, this.range * 2);
+    noStroke();
+  }
+}
+
+function updateTowers() {
+  for (let tower of towers) {
+    tower.attack();
+  }
+}
+
+function drawTowers() {
+  for (let tower of towers) {
+    tower.draw();
+  }
+}
+
+class Enemy {
+  constructor(type) {
+    this.type = type;
+    this.speed = type.speed;
+    this.health = type.health;
+    this.reward = type.reward;
+    this.color = type.color;
+    this.immuneTo = type.immuneTo || null;
+    this.currentWaypoint = 0;
+    this.x = path[0].x;
+    this.y = path[0].y;
+  }
+  
+  move() {
+    let target = path[this.currentWaypoint];
+    let dx = target.x - this.x;
+    let dy = target.y - this.y;
+    let distance = sqrt(dx*dx + dy*dy);
+    
+    if (distance < 2) {
+      this.currentWaypoint++;
+      if (this.currentWaypoint >= path.length) {
+        return; // Reached end
+      }
+      target = path[this.currentWaypoint];
+      dx = target.x - this.x;
+      dy = target.y - this.y;
+      distance = sqrt(dx*dx + dy*dy);
+    }
+    
+    this.x += (dx / distance) * this.speed;
+    this.y += (dy / distance) * this.speed;
+  }
+  
+  draw() {
+    // Draw HP bar
+    let hpPercent = this.health / this.type.health;
+    fill(255, 0, 0);
+    rect(this.x - 15, this.y - 25, 30, 5);
+    fill(0, 255, 0);
+    rect(this.x - 15, this.y - 25, 30 * hpPercent, 5);
+    
+    // Draw enemy body
+    fill(this.color);
+    push();
+    translate(this.x, this.y);
+    
+    switch(this.type.type) {
+      case "Fast":
+        triangle(0, -10, -10, 10, 10, 10);
+        break;
+      case "Immune":
+        beginShape();
+        for (let i = 0; i < 6; i++) {
+          let angle = i * TWO_PI / 6;
+          vertex(10 * cos(angle), 10 * sin(angle));
+        }
+        endShape(CLOSE);
+        break;
+      case "Strong":
+        beginShape();
+        for (let i = 0; i < 8; i++) {
+          let angle = i * TWO_PI / 8;
+          vertex(10 * cos(angle), 10 * sin(angle));
+        }
+        endShape(CLOSE);
+        break;
+      default:
+        ellipse(0, 0, 20, 20);
+    }
+    pop();
+  }
+}
+
+function spawnEnemies() {
+  if (spawnTimer <= 0) {
+    let typeIndex = round < enemyTypes.length ? round - 1 : floor(random(enemyTypes.length));
+    enemies.push(new Enemy(enemyTypes[typeIndex]));
+    spawnTimer = enemySpawnRate;
+  } else {
+    spawnTimer--;
+  }
+}
+
+function updateEnemies() {
+  for (let i = enemies.length - 1; i >= 0; i--) {
+    let enemy = enemies[i];
+    enemy.move();
+    if (enemy.health <= 0) {
+      money += enemy.reward;
+      score += 10;
+      enemies.splice(i, 1);
+      enemiesRemaining--;
+    }
+    if (enemy.x > width) {
+      lives--;
+      enemies.splice(i, 1);
+      enemiesRemaining--;
+      if (lives <= 0) {
+        gameOver = true;
+      }
+    }
+  }
+}
+
+function startNewRound() {
+  round++;
+  // Scale enemy count based on round
+  enemiesInRound = min(20 + round * 3, 50);
+  if (round > 10) enemiesInRound = 50 + (round - 10) * 5;
+  enemiesRemaining = enemiesInRound;
+  spawnTimer = 0;
+}
+
+function drawEnemies() {
+  for (let enemy of enemies) {
+    enemy.draw();
+  }
+}
+
+function displayUI() {
+  fill(255);
+  textSize(24);
+  text("Haginator TD", width - 150, 30);
+  textSize(16);
+  text(`Money: $${money}`, 10, 20);
+  text(`Score: ${score}`, 10, 40);
+  text(`Round: ${round}`, 10, 60);
+  text(`Lives: ${lives}`, 10, 80);
+  text(`Enemies: ${enemiesRemaining}/${enemiesInRound}`, 10, 100);
+  text(`Selected: ${selectedTower} (${towerTypes[selectedTower].cost})`, 10, 120);
+  
+  // Draw tower selection help
+  textSize(12);
+  text("Press 1-5 to switch towers:", 10, height - 30);
+  text("Right-click to sell towers (50%)", 10, height - 10);
+  let towerNames = Object.keys(towerTypes);
+  for (let i = 0; i < towerNames.length; i++) {
+    text(`${i+1}: ${towerNames[i]}`, 10 + i * 100, height - 50);
+  }
+}
+
+function drawGameOver() {
+  background(0);
+  fill(255, 0, 0);
+  textSize(48);
+  textAlign(CENTER, CENTER);
+  text("GAME OVER", width/2, height/2 - 50);
+  textSize(24);
+  text(`Final Score: ${score}`, width/2, height/2 + 20);
+  text(`Rounds Survived: ${round}`, width/2, height/2 + 60);
+  textAlign(LEFT, TOP);
+}

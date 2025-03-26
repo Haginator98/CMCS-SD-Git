@@ -1,0 +1,36 @@
+
+Powershell: 
+
+Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser
+Import-Module ExchangeOnlineManagement
+Connect-ExchangeOnline -UserPrincipalName <din-admin-bruker>
+
+
+#Sett Alias på bruker
+Set-Mailbox Johan.Carlsson@firesafe.se -EmailAddresses @{Add='Johan.Carlsson@FiresafeAS.onmicrosoft.com'}
+ 
+#Legge til DL på bruker
+
+Add-DistributionGroupMember -Identity firesafesverige@firesafe.no -Member "Johan.Carlsson@firesafe.se"
+
+#Fjerne DL på bruker
+Remove-DistributionGroupMember -Identity Firesafenorge@firesafe.no -Member "Michal.Brzostowski@firesafe.no"
+
+#sjekk/endre møterom visibility
+
+#Set-MailboxFolderPermission
+#[-Identity] <MailboxFolderIdParameter>
+#-User <MailboxFolderUserIdParameter>
+#AvailabilityOnly: View only availability data
+#LimitedDetails: View availability data with subject and location
+
+# https://learn.microsoft.com/en-us/powershell/module/exchange/set-mailboxfolderpermission?view=exchange-ps
+
+Get-MailboxFolderPermission -Identity mr.stockholm.siljan@Sikri.no:\Calendar
+Set-MailboxFolderPermission -Identity mr.stockholm.siljan@Sikri.no:\Calendar -AccessRights LimitedDetails
+
+#Legge til eier på DL
+Set-DistributionGroup -Identity "NavnPåDistribusjonsliste" -ManagedBy "brukernavn@dittdomene.no"
+
+#Opprette DL
+New-DistributionGroup -Name "Navn på distribusjonsliste" -Alias "AliasNavn" -PrimarySmtpAddress "epostadresse@dittdomene.no" -Members "bruker1@dittdomene.no", "bruker2@dittdomene.no"
