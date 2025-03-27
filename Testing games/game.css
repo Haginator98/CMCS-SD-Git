@@ -1,0 +1,74 @@
+/* Modern UI Styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #1a1a2e;
+  color: #e6e6e6;
+  margin: 0;
+  overflow: hidden;
+}
+
+#gameContainer {
+  position: relative;
+  width: 800px;
+  margin: 20px auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+canvas {
+  display: block;
+  background: #16213e;
+  border-radius: 8px;
+}
+
+#uiPanel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.7);
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #4cc9f0;
+}
+
+.tower-selector {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tower-option {
+  padding: 5px 10px;
+  background: #4a4e69;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tower-option:hover {
+  background: #f72585;
+  transform: scale(1.05);
+}
+
+.tower-option.selected {
+  background: #f72585;
+  box-shadow: 0 0 10px #f72585;
+}
+
+.mute-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #4a4e69;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mute-button:hover {
+  background: #f72585;
+}
+
+.mute-button.muted {
+  background: #f72585;
+}

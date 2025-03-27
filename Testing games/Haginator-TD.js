@@ -1,4 +1,5 @@
-// Haginator TD - Tower Defense Game
+// Copyright (c) 2025, Haginator TD Team
+//editor.p5js.org
 
 let towers = [];
 let enemies = [];
@@ -38,10 +39,25 @@ let enemyTypes = [
   { type: "Strong", speed: 1.2, health: 30, reward: 15, color: 'black' }
 ];
 
+// Import game systems
+import { particles } from './js/particles.js';
+import { soundManager } from './js/sound.js';
+
 function setup() {
   createCanvas(800, 500);
   textSize(16);
   noStroke();
+  
+  // Initialize game elements
+  initTowerSelection();
+  
+  // Setup mute button
+  const muteButton = select('#muteButton');
+  muteButton.mousePressed(() => {
+    soundManager.toggleMute();
+    muteButton.html(soundManager.muted ? '🔇 Unmute' : '🔊 Mute');
+    muteButton.toggleClass('muted');
+  });
 }
 
 function draw() {
@@ -65,6 +81,8 @@ function draw() {
   updateTowers();
   drawTowers();
   drawEnemies();
+  particles.update();
+  particles.draw();
 }
 
 function drawPath() {
@@ -123,6 +141,39 @@ function mousePressed() {
   }
 }
 
+class Projectile {
+  constructor(tower, target) {
+    this.x = tower.x;
+    this.y = tower.y;
+    this.target = target;
+    this.speed = 5;
+    this.damage = tower.damage;
+    this.color = tower.color;
+    this.size = 5;
+  }
+
+  update() {
+    const dx = this.target.x - this.x;
+    const dy = this.target.y - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    
+    if (dist < this.speed) {
+      this.target.health -= this.damage;
+      particles.create('hit', this.target.x, this.target.y, this.color, 5);
+      return true; // Hit target
+    }
+    
+    this.x += (dx / dist) * this.speed;
+    this.y += (dy / dist) * this.speed;
+    return false;
+  }
+
+  draw() {
+    fill(this.color);
+    ellipse(this.x, this.y, this.size, this.size);
+  }
+}
+
 class Tower {
   constructor(x, y, type) {
     this.x = x;
@@ -131,16 +182,40 @@ class Tower {
     this.range = towerTypes[type].range;
     this.damage = towerTypes[type].damage;
     this.color = towerTypes[type].color;
+    this.cooldown = 0;
+    this.projectiles = [];
   }
   
   attack() {
+    if (this.cooldown > 0) {
+      this.cooldown--;
+      return;
+    }
+
     for (let enemy of enemies) {
       let d = dist(this.x, this.y, enemy.x, enemy.y);
       if (d < this.range) {
         if (!enemy.immuneTo || enemy.immuneTo !== this.type) {
-          enemy.health -= this.damage;
+          this.projectiles.push(new Projectile(this, enemy));
+          soundManager.play('tower_attack');
+          this.cooldown = 30; // Attack speed
+          break;
         }
       }
+    }
+  }
+
+  updateProjectiles() {
+    for (let i = this.projectiles.length - 1; i >= 0; i--) {
+      if (this.projectiles[i].update()) {
+        this.projectiles.splice(i, 1);
+      }
+    }
+  }
+
+  drawProjectiles() {
+    for (const proj of this.projectiles) {
+      proj.draw();
     }
   }
   
@@ -154,17 +229,21 @@ class Tower {
       this.x + 10, this.y - 5,
       this.x, this.y - 20
     );
-    // Draw safe range indicator
-    noFill();
-    stroke(0, 255, 0, 50);
-    ellipse(this.x, this.y, this.range * 2, this.range * 2);
-    noStroke();
+    // Draw safe range indicator when selected
+    if (this.selected) {
+      noFill();
+      stroke(0, 255, 0, 50);
+      ellipse(this.x, this.y, this.range * 2, this.range * 2);
+      noStroke();
+    }
+    this.drawProjectiles();
   }
 }
 
 function updateTowers() {
   for (let tower of towers) {
     tower.attack();
+    tower.updateProjectiles();
   }
 }
 
@@ -265,6 +344,15 @@ function updateEnemies() {
     if (enemy.health <= 0) {
       money += enemy.reward;
       score += 10;
+      // Create death explosion particles
+      particles.create(
+        'explosion',
+        enemy.x,
+        enemy.y,
+        enemy.color,
+        15
+      );
+      soundManager.play('enemy_death');
       enemies.splice(i, 1);
       enemiesRemaining--;
     }
@@ -274,6 +362,7 @@ function updateEnemies() {
       enemiesRemaining--;
       if (lives <= 0) {
         gameOver = true;
+        soundManager.play('game_over');
       }
     }
   }
@@ -286,6 +375,7 @@ function startNewRound() {
   if (round > 10) enemiesInRound = 50 + (round - 10) * 5;
   enemiesRemaining = enemiesInRound;
   spawnTimer = 0;
+  soundManager.play('round_start');
 }
 
 function drawEnemies() {
