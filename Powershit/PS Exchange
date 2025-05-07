@@ -1,33 +1,36 @@
-
 Powershell: 
 
 Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser
 Import-Module ExchangeOnlineManagement
-Connect-ExchangeOnline -UserPrincipalName <din-admin-bruker>
+Connect-ExchangeOnline -UserPrincipalName epostadresse@dittdomene.no
 
 
 #Sett Alias på bruker
-Set-Mailbox Johan.Carlsson@firesafe.se -EmailAddresses @{Add='Johan.Carlsson@FiresafeAS.onmicrosoft.com'}
+Set-Mailbox epostadresse@dittdomene.no -EmailAddresses @{Add='dinbruker@FiresafeAS.onmicrosoft.com'}
  
 #Legge til DL på bruker
 
-Add-DistributionGroupMember -Identity firesafesverige@firesafe.no -Member "Johan.Carlsson@firesafe.se"
+Add-DistributionGroupMember -Identity firesafesverige@firesafe.no -Member "epostadresse@dittdomene.no"
 
 #Fjerne DL på bruker
-Remove-DistributionGroupMember -Identity Firesafenorge@firesafe.no -Member "Michal.Brzostowski@firesafe.no"
+Remove-DistributionGroupMember -Identity Firesafenorge@firesafe.no -Member "epostadresse@dittdomene.no"
 
 #sjekk/endre møterom visibility
 
 #Set-MailboxFolderPermission
-#[-Identity] <MailboxFolderIdParameter>
-#-User <MailboxFolderUserIdParameter>
+#[-Identity] <mailboks det gjelder>
+#-User <bruker som skal ha tilgang>
 #AvailabilityOnly: View only availability data
 #LimitedDetails: View availability data with subject and location
 
 # https://learn.microsoft.com/en-us/powershell/module/exchange/set-mailboxfolderpermission?view=exchange-ps
 
-Get-MailboxFolderPermission -Identity mr.stockholm.siljan@Sikri.no:\Calendar
-Set-MailboxFolderPermission -Identity mr.stockholm.siljan@Sikri.no:\Calendar -AccessRights LimitedDetails
+Get-MailboxFolderPermission -Identity epostadresse@dittdomene.no:\Calendar
+
+Set-MailboxFolderPermission -Identity epostadresse@dittdomene.no:\Calendar -User Default -AccessRights LimitedDetails
+
+#Se hva kalender heter
+Get-MailboxFolderStatistics -Identity epostadresse@dittdomene.no | Where-Object {$_.FolderType -eq "Calendar"}
 
 #Legge til eier på DL
 Set-DistributionGroup -Identity "NavnPåDistribusjonsliste" -ManagedBy "brukernavn@dittdomene.no"
