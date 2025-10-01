@@ -1,19 +1,16 @@
 Powershell: 
-
 Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser
 Import-Module ExchangeOnlineManagement
 Connect-ExchangeOnline -UserPrincipalName epostadresse@dittdomene.no
 
-
 #Sett Alias på bruker
-Set-Mailbox epostadresse@dittdomene.no -EmailAddresses @{Add='dinbruker@FiresafeAS.onmicrosoft.com'}
+Set-Mailbox epostadresse@dittdomene.no -EmailAddresses @{Add='dinbruker@domain.com'}
  
 #Legge til DL på bruker
-
-Add-DistributionGroupMember -Identity firesafesverige@firesafe.no -Member "epostadresse@dittdomene.no"
+Add-DistributionGroupMember -Identity distribusjon@domain.no -Member "epostadresse@dittdomene.no"
 
 #Fjerne DL på bruker
-Remove-DistributionGroupMember -Identity Firesafenorge@firesafe.no -Member "epostadresse@dittdomene.no"
+Remove-DistributionGroupMember -Identity distribusjon@domain.no -Member "epostadresse@dittdomene.no"
 
 #sjekk/endre møterom visibility
 
@@ -22,7 +19,6 @@ Remove-DistributionGroupMember -Identity Firesafenorge@firesafe.no -Member "epos
 #-User <bruker som skal ha tilgang>
 #AvailabilityOnly: View only availability data
 #LimitedDetails: View availability data with subject and location
-
 # https://learn.microsoft.com/en-us/powershell/module/exchange/set-mailboxfolderpermission?view=exchange-ps
 
 Get-MailboxFolderPermission -Identity epostadresse@dittdomene.no:\Calendar
@@ -37,3 +33,6 @@ Set-DistributionGroup -Identity "NavnPåDistribusjonsliste" -ManagedBy "brukerna
 
 #Opprette DL
 New-DistributionGroup -Name "Navn på distribusjonsliste" -Alias "AliasNavn" -PrimarySmtpAddress "epostadresse@dittdomene.no" -Members "bruker1@dittdomene.no", "bruker2@dittdomene.no"
+
+#Sjekke eier av alias
+Get-Mailbox -Identity "epostadresse@dittdomene.no"

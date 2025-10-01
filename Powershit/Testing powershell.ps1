@@ -1,6 +1,6 @@
-
-Powershell: 
+#Powershell: 
 
 Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser
 Import-Module ExchangeOnlineManagement
-Connect-ExchangeOnline
+Connect-ExchangeOnline -UserPrincipalName epostadresse@dittdomene.no
+
