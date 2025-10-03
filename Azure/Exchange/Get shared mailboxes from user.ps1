@@ -2,7 +2,7 @@ Import-Module ExchangeOnlineManagement
 Connect-ExchangeOnline
 
 # Define the user you want to check
-$user = "bruker@domene.no"
+$user = Read-Host "Enter the user (UPN or alias)"
 
 # Get only shared mailboxes
 $mailboxes = Get-Mailbox -ResultSize Unlimited -RecipientTypeDetails SharedMailbox
@@ -47,5 +47,5 @@ $results = $fullAccess + $sendAs
 if ($results) {
     $results | Format-Table -AutoSize
 } else {
-    Write-Host "Ingen rettigheter funnet for $user" -ForegroundColor Yellow
+    Write-Host "No shared mailboxes found for $user" -ForegroundColor Yellow
 }
