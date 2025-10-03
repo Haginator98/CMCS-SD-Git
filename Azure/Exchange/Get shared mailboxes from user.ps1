@@ -1,5 +1,5 @@
-Import-Module ExchangeOnlineManagement
-Connect-ExchangeOnline
+# Import-Module ExchangeOnlineManagement
+# Connect-ExchangeOnline
 
 # Define the user you want to check
 $user = Read-Host "Enter the user (UPN or alias)"
