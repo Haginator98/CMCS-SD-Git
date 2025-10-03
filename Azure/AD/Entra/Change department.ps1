@@ -1,29 +1,41 @@
 # Install-Module Microsoft.Graph -Scope CurrentUser
 
 # Sign in to Microsoft Graph
-Connect-MgGraph -Scopes "User.ReadWrite.All"
+#Connect-MgGraph -Scopes "User.ReadWrite.All"
 
 # Specify old and new department names
-$oldDepartment = "Administrasjon og giveroppføling"
-$newDepartment = "Administrasjon og giveroppfølging"
+write-Host "This script will change the Department attribute for users in Entra ID (Azure AD)." -ForegroundColor Cyan
+Start-Sleep -Seconds 1
 
 # Retrieve all users (may take time if you have many users)
 $allUsers = Get-MgUser -All -Property "displayName,department,userPrincipalName,id"
+Write-Host "Fetching all users..." -ForegroundColor Cyan
+
+#  Old Department name
+$oldDepartment = Read-Host "Enter the old department name to search for"
 
 # Filter users by department
 $users = $allUsers | Where-Object { $_.Department -eq $oldDepartment }
 
 if ($users.Count -eq 0) {
     Write-Host "No users found with department '$oldDepartment'" -ForegroundColor Yellow
+    Write-Host "Exiting script." -ForegroundColor Red
+    return
 } else {
     Write-Host "Found $($users.Count) users with department '$oldDepartment'" -ForegroundColor Cyan
+}
 
-    # Bekreft, vis liste eller avbryt før endring av avdeling på brukere
-    while ($true) {
-        $confirm = Read-Host "Are you sure you want to set department '$newDepartment' for $($users.Count) users? (y = yes, n = no, l = list users)"
+# New Department name
+$newDepartment = Read-Host "Enter the new department name to be set"
+
+
+    # Confirm before making changes
+    $ready = $false
+    while (-not $ready) {
+        $confirm = Read-Host "Are you sure you want to set Department '$newDepartment' for $($users.Count) users? (y = yes, n = no, l = list users)"
         switch ($confirm.ToLower()) {
             'y' {
-                break
+                $ready = $true
             }
             'n' {
                 Write-Host "Operation cancelled." -ForegroundColor Red
@@ -45,4 +57,3 @@ if ($users.Count -eq 0) {
     }
 
     Write-Host "Update complete." -ForegroundColor Green
-}
