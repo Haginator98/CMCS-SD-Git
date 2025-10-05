@@ -1,5 +1,6 @@
 Tools.ps1 
 - auto connect to Azure
+- auto import modules
 - enter user credentials to login
 - auto disconnect from Azure
 - clear host after exit
