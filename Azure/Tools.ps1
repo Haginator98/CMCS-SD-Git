@@ -20,9 +20,9 @@ while ($true) {
 ░╚═══██╗██╔══╝░░██╔══██╗░╚████╔╝░██║██║░░██╗██╔══╝░░██║░░██║██╔══╝░░░╚═══██╗██╔═██╗░
 ██████╔╝███████╗██║░░██║░░╚██╔╝░░██║╚█████╔╝███████╗██████╔╝███████╗██████╔╝██║░╚██╗
 ╚═════╝░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░╚════╝░╚══════╝╚═════╝░╚══════╝╚═════╝░╚═╝░░╚═╝" -ForegroundColor Cyan
-    Write-Host "Welcome to Servicedesk Tools!"-ForegroundColor Cyan
+    Write-Host "Welcome to Servicedesk Tools!"-ForegroundColor Cyan 
     Write-Host "Remember, not all scripts are tested or fully functional! Use at your own risk!" -ForegroundColor Yellow
-    Write-Host "Some scripts requires you to already be logged in" -ForegroundColor Yellow
+    Write-Host "`e[1mSome scripts requires you to already be logged in`e[0m" -ForegroundColor darkred
     Write-Host "Select a script to run:" -ForegroundColor Yellow
     for ($i = 0; $i -lt $scripts.Count; $i++) {
         Write-Host "$($i+1): $($scripts[$i].Name)"
@@ -43,4 +43,6 @@ while ($true) {
         Start-Sleep -Seconds 2
     }
 }
-
+Write-Host "Exiting Servicedesk Tools. Goodbye!" -ForegroundColor Green
+Start-Sleep -Seconds 2
+Clear-Host
