@@ -1,0 +1,5 @@
+Tools.ps1 
+- auto connect to Azure
+- enter user credentials to login
+- auto disconnect from Azure
+- clear host after exit
