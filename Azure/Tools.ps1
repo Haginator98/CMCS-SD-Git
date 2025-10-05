@@ -1,4 +1,6 @@
-#This script is used to choose what script to run in Azure AD / Entra ID
+#This script is used to choose what script to run in Azure AD / Exchange environment
+#Made by Mr. Hagen - 2025
+
 # List available scripts
 $scripts = @(
     @{ Name = "Entra ID - Change Department"; Path = ".\\Entra\\change department.ps1" }
