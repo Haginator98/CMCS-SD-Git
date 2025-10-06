@@ -16,13 +16,15 @@ $Mailboxes = Get-Recipient -ResultSize Unlimited | Where-Object {
 if ($Mailboxes) {
     Write-Host "Mailboxes matching alias '$Alias':"
     $Mailboxes | Select-Object Name,RecipientType,EmailAddresses | Format-Table -AutoSize
+    $null = Read-Host "Press Enter to confirm you have read the information"
 } else {
     Write-Host "No mailbox found with alias '$Alias'"
+    Start-Sleep -Seconds 2
 }
 
 # Disconnect from Exchange Online
 Write-Host "Disconnecting from Exchange Online..." -ForegroundColor Cyan
 Disconnect-ExchangeOnline -Confirm:$false
 Write-Host "Disconnected. Script finished." -ForegroundColor Green
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 3
 Clear-Host
