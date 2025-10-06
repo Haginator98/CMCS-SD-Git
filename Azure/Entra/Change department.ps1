@@ -1,17 +1,21 @@
-# Install-Module Microsoft.Graph -Scope CurrentUser
+# Import Microsoft Graph module if not already imported
+#if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
+#    Write-Host "Microsoft.Graph module not found. Installing..." -ForegroundColor Yellow
+#    Install-Module Microsoft.Graph -Scope CurrentUser -Force
+#}
+#Import-Module Microsoft.Graph
 
-# Sign in to Microsoft Graph
-#Connect-MgGraph -Scopes "User.ReadWrite.All"
-
-# Specify old and new department names
-write-Host "This script will change the Department attribute for users in Entra ID (Azure AD)." -ForegroundColor Cyan
+# Prompt user to sign in to Microsoft Graph
+Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
+Connect-MgGraph -Scopes "User.ReadWrite.All" -NoWelcome
+Write-Host "This script will change the Department attribute for users in Entra ID (Azure AD)." -ForegroundColor Cyan
 Start-Sleep -Seconds 1
 
 # Retrieve all users (may take time if you have many users)
-$allUsers = Get-MgUser -All -Property "displayName,department,userPrincipalName,id"
 Write-Host "Fetching all users..." -ForegroundColor Cyan
+$allUsers = Get-MgUser -All -Property "displayName,department,userPrincipalName,id"
 
-#  Old Department name
+# Old Department name
 $oldDepartment = Read-Host "Enter the old department name to search for"
 
 # Filter users by department
@@ -26,34 +30,44 @@ if ($users.Count -eq 0) {
 }
 
 # New Department name
-$newDepartment = Read-Host "Enter the new department name to be set"
+$newDepartment = Read-Host "Enter the new Department name to be set"
 
-
-    # Confirm before making changes
-    $ready = $false
-    while (-not $ready) {
-        $confirm = Read-Host "Are you sure you want to set Department '$newDepartment' for $($users.Count) users? (y = yes, n = no, l = list users)"
-        switch ($confirm.ToLower()) {
-            'y' {
-                $ready = $true
-            }
-            'n' {
-                Write-Host "Operation cancelled." -ForegroundColor Red
-                return
-            }
-            'l' {
-                Write-Host "Users to be updated:" -ForegroundColor Cyan
-                $users | Select-Object UserPrincipalName, DisplayName, Department | Format-Table
-            }
-            default {
-                Write-Host "Please enter y (yes), n (no), or l (list users)." -ForegroundColor Yellow
-            }
+# Confirm before making changes
+$ready = $false
+while (-not $ready) {
+    $confirm = Read-Host "Are you sure you want to set '$newDepartment' for $($users.Count) users? (y = yes, n = no, l = list users)"
+    switch ($confirm.ToLower()) {
+        'y' {
+            $ready = $true
+        }
+        'n' {
+            Write-Host "Operation cancelled. Exiting script" -ForegroundColor Red
+            Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
+            Disconnect-MgGraph | Out-Null
+            Write-Host "Disconnected. Script finished." -ForegroundColor Green
+            Start-Sleep -Seconds 2
+            return
+        }
+        'l' {
+            Write-Host "Users to be updated:" -ForegroundColor Cyan
+            $users | Select-Object UserPrincipalName, DisplayName, Department | Format-Table
+        }
+        default {
+            Write-Host "Please enter y (yes), n (no), or l (list users)." -ForegroundColor Yellow
         }
     }
+}
 
-    foreach ($user in $users) {
-        Write-Host "Updating $($user.UserPrincipalName) with new department '$newDepartment'" -ForegroundColor Green
-        Update-MgUser -UserId $user.Id -Department $newDepartment
-    }
+foreach ($user in $users) {
+    Write-Host "Updating $($user.UserPrincipalName) with new department '$newDepartment'" -ForegroundColor Green
+    Update-MgUser -UserId $user.Id -Department $newDepartment
+}
 
-    Write-Host "Update complete." -ForegroundColor Green
+Write-Host "Update complete." -ForegroundColor Green
+
+# Disconnect from Microsoft Graph
+Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
+Disconnect-MgGraph | Out-Null
+Write-Host "Disconnected. Script finished." -ForegroundColor Green
+Start-Sleep -Seconds 2
+Clear-Host
