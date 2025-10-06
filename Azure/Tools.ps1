@@ -7,7 +7,7 @@ $scripts = @(
     @{ Name = "Entra ID - Change Street Address"; Path = ".\\Entra\\change street address Entra.ps1" }
     @{ Name = "Entra ID - Change Dep. Office based on Streed Address"; Path = ".\\Entra\\change dep.office based on street address.ps1" } 
     @{ Name = "Exchange - Find Alias Mailbox"; Path = ".\\Exchange\\Find-Aliasmailbox.ps1" }
-    # @{ Name = "Exchange - Get shared mailboxes from user"; Path = ".\\Exchange\\Get shared mailboxes from user.ps1" }
+    @{ Name = "Exchange - Get shared mailboxes from user"; Path = ".\\Exchange\\Get shared mailboxes from user.ps1" }
     # @{ Name = "Exchange - Calendar acces" ; Path = ".\\Exchange\\Calendar Access.ps1" }
     # @{ Name = "Exchange - Add Distribution Lists to users"; Path = ".\\Exchange\\Add DLs to users.ps1" }
 )
