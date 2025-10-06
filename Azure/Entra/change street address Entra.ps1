@@ -3,6 +3,12 @@
 # Log in to Microsoft Graph
 #Connect-MgGraph -Scopes "User.ReadWrite.All"
 
+# Prompt user to sign in to Microsoft Graph
+Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
+Connect-MgGraph -Scopes "User.ReadWrite.All" -NoWelcome
+Write-Host "This script will change the Street Address attribute for users in Entra ID (Azure AD)." -ForegroundColor Cyan
+Start-Sleep -Seconds 1
+
 # Prompt for old and new address
 $oldAddress = Read-Host "Enter the old street address to search for"
 $newAddress = Read-Host "Enter the new street address to set"
@@ -27,7 +33,11 @@ if ($usersToUpdate.Count -eq 0) {
                 $ready = $true
             }
             'n' {
-                Write-Host "Operation cancelled." -ForegroundColor Red
+                Write-Host "Operation cancelled. Exiting script" -ForegroundColor Red
+                Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
+                Disconnect-MgGraph | Out-Null
+                Write-Host "Disconnected. Script finished." -ForegroundColor Green
+                Start-Sleep -Seconds 2
                 return
             }
             'l' {
@@ -47,3 +57,9 @@ if ($usersToUpdate.Count -eq 0) {
 
     Write-Host "Update completed." -ForegroundColor Green
 }
+# Disconnect from Microsoft Graph
+Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
+Disconnect-MgGraph | Out-Null
+Write-Host "Disconnected. Script finished." -ForegroundColor Green
+Start-Sleep -Seconds 2
+Clear-Host
