@@ -2,7 +2,11 @@
 # Connect-ExchangeOnline
 
 # Define the user you want to check
-$user = Read-Host "Enter the user (UPN or alias)"
+Write-Host "Connecting to Exchange Online..." -ForegroundColor Cyan
+Connect-ExchangeOnline | Out-Null
+Write-Host "This script will help you find mailboxes based on an alias." -ForegroundColor Cyan
+
+$user = Read-Host "Enter the user (alias, UPN, or email) to get shared mailbox access"
 
 # Get only shared mailboxes
 $mailboxes = Get-Mailbox -ResultSize Unlimited -RecipientTypeDetails SharedMailbox
@@ -14,8 +18,6 @@ $fullAccess = @()
 $sendAs = @()
 
 foreach ($mb in $mailboxes) {
-    $counter++
-
     # Show progress bar
     Write-Progress -Activity "Checking shared mailbox permissions" `
                    -Status "Mailbox: $($mb.Identity)" `
@@ -39,6 +41,7 @@ foreach ($mb in $mailboxes) {
 
     if ($sa) { $sendAs += $sa }
 }
+Write-Progress -Activity "Checking shared mailbox permissions" -Completed
 
 # Merge results
 $results = $fullAccess + $sendAs
@@ -46,6 +49,24 @@ $results = $fullAccess + $sendAs
 # Output
 if ($results) {
     $results | Format-Table -AutoSize
+
+    # Use cross-platform Desktop path
+    $desktop = [Environment]::GetFolderPath('Desktop')
+    $csvPath = "$desktop/SMB_$($user)_$(Get-Date -Format 'yyyyMMdd').csv"
+    $results | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
+    Start-Sleep -Seconds 2  # Wait to ensure export is complete
+    Write-Host "Results exported to $csvPath" -ForegroundColor Green
+    Start-Sleep -Seconds 4
+    Write-Host "Script will now disconnect from Exchange Online..." -ForegroundColor Cyan
+    Disconnect-ExchangeOnline -Confirm:$false
+    Write-Host "Disconnected. Script finished." -ForegroundColor Green
+    Start-Sleep -Seconds 1
+    Clear-Host
 } else {
     Write-Host "No shared mailboxes found for $user" -ForegroundColor Yellow
+    Write-Host "Disconnecting from Exchange Online..." -ForegroundColor Cyan
+    Disconnect-ExchangeOnline -Confirm:$false
+    Write-Host "Disconnected. Script finished." -ForegroundColor Green
+    Start-Sleep -Seconds 2
+    Clear-Host
 }
