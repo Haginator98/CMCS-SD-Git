@@ -3,9 +3,29 @@
 # Log in to Microsoft Graph
 #Connect-MgGraph -Scopes "User.ReadWrite.All"
 
-# Prompt user to sign in to Microsoft Graph
+# Check if Microsoft.Graph module is installed
+$Module = Get-Module -Name Microsoft.Graph -ListAvailable
+if ($Module.Count -eq 0) {
+    Write-Host "Microsoft.Graph module is not available." -ForegroundColor Yellow
+    $Confirm = Read-Host "Are you sure you want to install the module? [Y] Yes [N] No"
+    if ($Confirm -match "[yY]") {
+        Write-Host "Installing Microsoft.Graph module..." -ForegroundColor Cyan
+        Install-Module Microsoft.Graph -Scope CurrentUser -Force
+        if ($?) {
+            Write-Host "Microsoft.Graph module installed successfully." -ForegroundColor Green
+        } else {
+            Write-Host "Failed to install Microsoft.Graph module." -ForegroundColor Red
+            Exit
+        }
+    } else {
+        Write-Host "Microsoft.Graph module is required. Please install it using Install-Module Microsoft.Graph cmdlet."
+        Exit
+    }
+}
+# Do NOT import the module explicitly
 Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
 Connect-MgGraph -Scopes "User.ReadWrite.All" -NoWelcome
+
 Write-Host "This script will change the Street Address attribute for users in Entra ID (Azure AD)." -ForegroundColor Cyan
 Start-Sleep -Seconds 1
 
@@ -61,5 +81,5 @@ if ($usersToUpdate.Count -eq 0) {
 Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
 Disconnect-MgGraph | Out-Null
 Write-Host "Disconnected. Script finished." -ForegroundColor Green
-Start-Sleep -Seconds 2
+Start-Sleep -Seconds 3
 Clear-Host

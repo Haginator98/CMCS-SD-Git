@@ -1,11 +1,27 @@
 # Import-Module ExchangeOnlineManagement
 # Connect-ExchangeOnline
 
-# Define the user you want to check
+# Check if ExchangeOnlineManagement module is installed
+$Module = Get-Module -Name ExchangeOnlineManagement -ListAvailable
+if ($Module.Count -eq 0) {
+    Write-Host ExchangeOnlineManagement module is not available -ForegroundColor yellow
+    $Confirm = Read-Host "Are you sure you want to install module? [Y] Yes [N] No"
+    if ($Confirm -match "[yY]") {
+        Install-Module ExchangeOnlineManagement
+    } else {
+        Write-Host ExchangeOnlineManagement module is required. Please install module using Install-Module ExchangeOnlineManagement cmdlet.
+        Exit
+    }
+}
+Write-Host Importing ExchangeOnlineManagement module... -ForegroundColor Yellow
+Import-Module ExchangeOnlineManagement
+
+
 Write-Host "Connecting to Exchange Online..." -ForegroundColor Cyan
 Connect-ExchangeOnline | Out-Null
 Write-Host "This script will help you find mailboxes based on an alias." -ForegroundColor Cyan
 
+# Define the user to check permissions for
 $user = Read-Host "Enter the user (alias, UPN, or email) to get shared mailbox access"
 
 # Get only shared mailboxes
