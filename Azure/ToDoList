@@ -1,6 +1,7 @@
 Tools.ps1 
-- auto connect to Azure
+Done - auto connect to Azure
+Kinda done, browser login prompt - enter user credentials to login
+Done - auto disconnect from Azure
+done - clear host after exit 
+
 - auto import modules
-- enter user credentials to login
-- auto disconnect from Azure
-- clear host after exit
