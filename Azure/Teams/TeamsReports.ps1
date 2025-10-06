@@ -85,11 +85,14 @@ Do {
   $i=$Action
  }
 
- Switch ($i) {
+ # Get cross-platform Desktop path
+$DesktopPath = [Environment]::GetFolderPath('Desktop')
+
+Switch ($i) {
   1 {
      $Result=""  
      $Results=@() 
-     $Path="./All Teams Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+     $Path = Join-Path $DesktopPath ("All Teams Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
      Write-Host Exporting all Teams report...
      $Count=0
      Get-Team | ForEach-Object {
@@ -118,7 +121,7 @@ Do {
   2 {
      $Result=""  
      $Results=@() 
-     $Path="./All Teams Members and Owner Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+     $Path = Join-Path $DesktopPath ("All Teams Members and Owner Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
      Write-Host Exporting all Teams members and owners report...
      $Count=0
      Get-Team | ForEach-Object {
@@ -148,7 +151,7 @@ Do {
      $TeamName=Read-Host Enter Teams name to get members report "(Case sensitive)":
      $GroupId=(Get-Team -DisplayName $TeamName).GroupId 
      Write-Host Exporting $TeamName"'s" Members and Owners report...
-     $Path=".\MembersOf $TeamName Team Report _$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+     $Path = Join-Path $DesktopPath ("MembersOf $TeamName Team Report _$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
      Get-TeamUser -GroupId $GroupId | ForEach-Object {
       $Name=$_.Name
       $MemberMail=$_.User
@@ -166,7 +169,7 @@ Do {
   4 {
      $Result=""  
      $Results=@() 
-     $Path="./All Teams Owner Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+     $Path = Join-Path $DesktopPath ("All Teams Owner Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
      Write-Host Exporting all Teams owner report...
      $Count=0
      Get-Team | ForEach-Object {
@@ -195,7 +198,7 @@ Do {
      $TeamName=Read-Host Enter Teams name to get owners report "(Case sensitive)":
      $GroupId=(Get-Team -DisplayName $TeamName).GroupId 
      Write-Host Exporting $TeamName team"'"s Owners report...
-     $Path=".\OwnersOf $TeamName team report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+     $Path = Join-Path $DesktopPath ("OwnersOf $TeamName team report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
      Get-TeamUser -GroupId $GroupId | Where-Object{$_.role -eq "Owner"} | ForEach-Object {
       $Name=$_.Name
       $MemberMail=$_.User
@@ -212,7 +215,7 @@ Do {
   6 {
       $Result=""  
       $Results=@() 
-      $Path="./All Channels Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+      $Path = Join-Path $DesktopPath ("All Channels Report_$((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
       Write-Host Exporting all Channels report...
       $Count=0
       Get-Team | ForEach-Object {
@@ -245,7 +248,7 @@ Do {
       Write-Host Exporting Channels report...
       $Count=0
       $GroupId=(Get-Team -DisplayName $TeamName).GroupId
-      $Path=".\Channels available in $TeamName team $((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+      $Path = Join-Path $DesktopPath ("Channels available in $TeamName team $((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
       Get-TeamChannel -GroupId $GroupId | ForEach-Object {
        $ChannelName=$_.DisplayName
        Write-Progress -Activity "`n     Processed channel count: $Count "`n"  Currently Processing Channel: $ChannelName"
@@ -273,7 +276,7 @@ Do {
       $ChannelName=Read-Host Enter Channel name
       $GroupId=(Get-Team -DisplayName $TeamName).GroupId 
       Write-Host Exporting $ChannelName"'s" Members and Owners report...
-      $Path=".\MembersOf $ChannelName channel report $((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv"
+      $Path = Join-Path $DesktopPath ("MembersOf $ChannelName channel report $((Get-Date -format yyyy-MMM-dd-ddd` hh-mm` tt).ToString()).csv")
       Get-TeamChannelUser -GroupId $GroupId -DisplayName $ChannelName | ForEach-Object {
        $Name=$_.Name
        $UPN=$_.User
@@ -294,4 +297,3 @@ Do {
 }
   While ($i -ne 0)
   Clear-Host
- 
