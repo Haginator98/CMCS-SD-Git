@@ -5,7 +5,7 @@
 $scripts = @(
     @{ Name = "Entra ID - Change Department"; Path = ".\\Entra\\change department.ps1" }
     @{ Name = "Entra ID - Change Street Address"; Path = ".\\Entra\\change street address Entra.ps1" }
-    @{ Name = "Entra ID - Change Dep. Office based on Streed Address"; Path = ".\\Entra\\change dep.office based on street address.ps1" } 
+    @{ Name = "Entra ID - Change Dep. Office based on Street Address"; Path = ".\\Entra\\change dep.office based on street address.ps1" } 
     @{ Name = "Exchange - Find Alias Mailbox"; Path = ".\\Exchange\\Find-Aliasmailbox.ps1" }
     @{ Name = "Exchange - Get shared mailboxes from user"; Path = ".\\Exchange\\Get shared mailboxes from user.ps1" }
     # @{ Name = "Exchange - Calendar acces" ; Path = ".\\Exchange\\Calendar Access.ps1" }
@@ -14,7 +14,6 @@ $scripts = @(
 
 while ($true) {
     Clear-Host
-    # SERVICEDESK - Matrix Style Logo
     Write-Host "
 ░██████╗███████╗██████╗░██╗░░░██╗██╗░█████╗░███████╗██████╗░███████╗░██████╗██╗░░██╗
 ██╔════╝██╔════╝██╔══██╗██║░░░██║██║██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝██║░██╔╝
@@ -22,7 +21,7 @@ while ($true) {
 ░╚═══██╗██╔══╝░░██╔══██╗░╚████╔╝░██║██║░░██╗██╔══╝░░██║░░██║██╔══╝░░░╚═══██╗██╔═██╗░
 ██████╔╝███████╗██║░░██║░░╚██╔╝░░██║╚█████╔╝███████╗██████╔╝███████╗██████╔╝██║░╚██╗
 ╚═════╝░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░╚════╝░╚══════╝╚═════╝░╚══════╝╚═════╝░╚═╝░░╚═╝" -ForegroundColor Cyan
-    Write-Host "Welcome to Servicedesk Tools! - Made by Mr Hagen"-ForegroundColor Green 
+    Write-Host "Welcome to Servicedesk Tools! - Made by Mr.Hagen"-ForegroundColor Green 
     Write-Host "Following scripts have been tested, let me know if there is a bug, issue with something or if you got any ideas for scripts to add. " -ForegroundColor Yellow
     Write-Host "Select a script to run:" -ForegroundColor Yellow
     for ($i = 0; $i -lt $scripts.Count; $i++) {
