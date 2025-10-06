@@ -23,7 +23,7 @@ while ($true) {
 ██████╔╝███████╗██║░░██║░░╚██╔╝░░██║╚█████╔╝███████╗██████╔╝███████╗██████╔╝██║░╚██╗
 ╚═════╝░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░╚════╝░╚══════╝╚═════╝░╚══════╝╚═════╝░╚═╝░░╚═╝" -ForegroundColor Cyan
     Write-Host "Welcome to Servicedesk Tools! - Made by Mr Hagen"-ForegroundColor Green 
-    Write-Host "Following scripts have been tested, let me know if there is a bug or issue with something. " -ForegroundColor Yellow
+    Write-Host "Following scripts have been tested, let me know if there is a bug, issue with something or if you got any ideas for scripts to add. " -ForegroundColor Yellow
     Write-Host "Select a script to run:" -ForegroundColor Yellow
     for ($i = 0; $i -lt $scripts.Count; $i++) {
         Write-Host "$($i+1): $($scripts[$i].Name)"
