@@ -10,6 +10,9 @@ $scripts = @(
     @{ Name = "Exchange - Get shared mailboxes from user"; Path = ".\\Exchange\\Get shared mailboxes from user.ps1" }
     # @{ Name = "Exchange - Calendar acces" ; Path = ".\\Exchange\\Calendar Access.ps1" }
     # @{ Name = "Exchange - Add Distribution Lists to users"; Path = ".\\Exchange\\Add DLs to users.ps1" }
+    
+    # @{ Name = "Teams - Team and Channel reporting "; Path = ".\\Teams\\TeamsReports.ps1" }
+    # Teams module is buggy, so this is commented out until further notice.
 )
 
 while ($true) {
