@@ -1,12 +1,10 @@
 # Requires Exchange Online PowerShell V2 module
 # Install-Module -Name ExchangeOnlineManagement -Scope CurrentUser
 
-# Prompt for email and password (for interactive login)
-$UserCredential = Get-Credential -Message "Enter your Exchange admin credentials"
-
 # Connect to Exchange Online
-Connect-ExchangeOnline -UserPrincipalName $UserCredential.UserName -ShowProgress $true
-
+Write-Host "Connecting to Exchange Online..." -ForegroundColor Cyan
+Connect-ExchangeOnline
+Write-Host "This script will help you find mailboxes based on an alias." -ForegroundColor Cyan
 # Prompt for the alias to search
 $Alias = Read-Host "Enter the alias address to search (without domain, e.g. 'jdoe')"
 
@@ -23,4 +21,8 @@ if ($Mailboxes) {
 }
 
 # Disconnect from Exchange Online
+Write-Host "Disconnecting from Exchange Online..." -ForegroundColor Cyan
 Disconnect-ExchangeOnline -Confirm:$false
+Write-Host "Disconnected. Script finished." -ForegroundColor Green
+Start-Sleep -Seconds 2
+Clear-Host
