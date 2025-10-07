@@ -28,14 +28,26 @@ Connect-MgGraph -Scopes "User.ReadWrite.All" -NoWelcome
 
 Write-Host "This script will change the Street Address attribute for users in Entra ID (Azure AD)." -ForegroundColor Cyan
 Start-Sleep -Seconds 1
-
-# Prompt for old and new address
-$oldAddress = Read-Host "Enter the old street address to search for"
-$newAddress = Read-Host "Enter the new street address to set"
-
 # Get all users (may take time if there are many users)
 $allUsers = Get-MgUser -All -Property "displayName,streetAddress,userPrincipalName,id"
 Write-Host "Fetching all users..." -ForegroundColor Cyan
+
+# Prompt for old address
+$oldAddress = Read-Host "Enter the old street address to search for"
+
+# Filter users by department
+$users = $allUsers | Where-Object { $_.StreetAddress -eq $oldAddress }
+
+if ($users.Count -eq 0) {
+    Write-Host "No users found with department '$oldAddress'" -ForegroundColor Yellow
+    Write-Host "Exiting script." -ForegroundColor Red
+    return
+} else {
+    Write-Host "Found $($users.Count) users with department '$oldAddress'" -ForegroundColor Cyan
+}
+
+# Prompt for new address
+$newAddress = Read-Host "Enter the new street address to set"
 
 # Filter locally on streetAddress
 $usersToUpdate = $allUsers | Where-Object { $_.StreetAddress -eq $oldAddress }
