@@ -9,3 +9,5 @@ done - clear host after exit
 - Add / remove distribution list x1
 - Recover script legges inn?
 - Om feilmelding i script, generer text fil med feilmelding
+- Create distribution list
+- Create dynamic distribution list
