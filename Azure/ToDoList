@@ -14,4 +14,3 @@ done - clear host after exit
 - Create distribution list
 - Create dynamic distribution list (emil)
 - Add script to extract all users with their manager - output csv file. no manager = missing (Chris)
-- test
