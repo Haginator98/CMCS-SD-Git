@@ -24,7 +24,7 @@ Import-Module ExchangeOnlineManagement
 
 #Dersom den er installert, bruk disse to linjene
 Import-Module ExchangeOnlineManagement
-Connect-ExchangeOnline -UserPrincipalName epostadresse@dittdomene.no
+Connect-ExchangeOnline
 
 # Define Users to receive access
 $Users = @(
