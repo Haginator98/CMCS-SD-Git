@@ -3,20 +3,21 @@
 
 # List available scripts
 $scripts = @(
-    @{ Name = "Entra ID - Change Department"; Path = "Azure/Entra/Change department.ps1" }
-    @{ Name = "Entra ID - Change Street Address"; Path = "Azure/Entra/change street address Entra.ps1" }
-    @{ Name = "Entra ID - Change Dep. Office based on Street Address"; Path = "Azure/Entra/change dep.office based on street address.ps1" } 
-    @{ Name = "Exchange - Find Alias Mailbox"; Path = "Azure/Exchange/Find-Aliasmailbox.ps1" }
-    @{ Name = "Exchange - Get shared mailboxes from user"; Path = "Azure/Exchange/Get shared mailboxes from user.ps1" }
-    # @{ Name = "Exchange - Calendar acces" ; Path = ".\\Exchange\\Calendar Access.ps1" }
-    # @{ Name = "Exchange - Add Distribution Lists to users"; Path = ".\\Exchange\\Add DLs to users.ps1" }
+    @{ Name = "Entra ID - Change Department"; Path = "$PSScriptRoot\Entra\Change department.ps1" }
+    @{ Name = "Entra ID - Change Street Address"; Path = "$PSScriptRoot\Entra\change street address Entra.ps1" }
+    @{ Name = "Entra ID - Change Dep. Office based on Street Address"; Path = "$PSScriptRoot\Entra\change dep.office based on street address.ps1" } 
+    @{ Name = "Exchange - Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-Aliasmailbox.ps1" }
+    @{ Name = "Exchange - Get shared mailboxes from user"; Path = "$PSScriptRoot\Exchange\Get shared mailboxes from user.ps1" }
+    @{ Name = "Exchange - Export all DL members"; Path = "$PSScriptRoot\Exchange\Export all DL members.ps1" }
+    @{ Name = "Exchange - Import DL members from CSV"; Path = "$PSScriptRoot\Exchange\Import DL members.ps1" }
+    # @{ Name = "Exchange - Calendar access" ; Path = "$PSScriptRoot\Exchange\Calendar Access.ps1" }
+    # @{ Name = "Exchange - Add Distribution Lists to users"; Path = "$PSScriptRoot\Exchange\Add DLs to users.ps1" }
     
-    # @{ Name = "Teams - Team and Channel reporting "; Path = ".\\Teams\\TeamsReports.ps1" }
+    # @{ Name = "Teams - Team and Channel reporting "; Path = "$PSScriptRoot\Teams\TeamsReports.ps1" }
     # Teams module is buggy, so this is commented out until further notice.
 )
 
 while ($true) {
-    Clear-Host
     Write-Host "
 ░██████╗███████╗██████╗░██╗░░░██╗██╗░█████╗░███████╗██████╗░███████╗░██████╗██╗░░██╗
 ██╔════╝██╔════╝██╔══██╗██║░░░██║██║██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝██║░██╔╝
