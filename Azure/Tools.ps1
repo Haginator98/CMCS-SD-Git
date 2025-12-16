@@ -6,6 +6,8 @@ $scripts = @(
     @{ Name = "Entra ID - Change Department"; Path = "$PSScriptRoot\Entra\Change department.ps1" }
     @{ Name = "Entra ID - Change Street Address"; Path = "$PSScriptRoot\Entra\change street address Entra.ps1" }
     @{ Name = "Entra ID - Change Dep. Office based on Street Address"; Path = "$PSScriptRoot\Entra\change dep.office based on street address.ps1" } 
+    @{ Name = "Entra ID - Bulk import CSV"; Path = "$PSScriptRoot\Entra\ Bulk import CSV.ps1" }
+    @{ Name = "Entra ID - Update users from CSV"; Path = "$PSScriptRoot\Entra\Update users from CSV.ps1" }
     @{ Name = "Exchange - Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-Aliasmailbox.ps1" }
     @{ Name = "Exchange - Get shared mailboxes from user"; Path = "$PSScriptRoot\Exchange\Get shared mailboxes from user.ps1" }
     @{ Name = "Exchange - Export all DL members"; Path = "$PSScriptRoot\Exchange\Export all DL members.ps1" }
@@ -28,6 +30,7 @@ while ($true) {
     Write-Host "Welcome to Servicedesk Tools! - Made by Mr.Hagen"-ForegroundColor Green 
     Write-Host "Following scripts have been tested, let me know if there is a bug, issue with something or if you got any ideas for scripts to add. " -ForegroundColor Yellow
     Write-Host "Select a script to run:" -ForegroundColor Yellow
+    Write-Host "Remember that you need PIM activated" -ForegroundColor Yellow
     for ($i = 0; $i -lt $scripts.Count; $i++) {
         Write-Host "$($i+1): $($scripts[$i].Name)"
     }
