@@ -6,7 +6,7 @@ $scripts = @(
     @{ Name = "Entra ID - Change Department"; Path = "$PSScriptRoot\Entra\Change department.ps1" }
     @{ Name = "Entra ID - Change Street Address"; Path = "$PSScriptRoot\Entra\change street address Entra.ps1" }
     @{ Name = "Entra ID - Change Dep. Office based on Street Address"; Path = "$PSScriptRoot\Entra\change dep.office based on street address.ps1" } 
-    @{ Name = "Entra ID - Bulk import CSV"; Path = "$PSScriptRoot\Entra\ Bulk import CSV.ps1" }
+    @{ Name = "Entra ID - Bulk import CSV"; Path = "$PSScriptRoot\Entra\Bulk import CSV.ps1" }
     @{ Name = "Entra ID - Update users from CSV"; Path = "$PSScriptRoot\Entra\Update users from CSV.ps1" }
     @{ Name = "Exchange - Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-Aliasmailbox.ps1" }
     @{ Name = "Exchange - Get shared mailboxes from user"; Path = "$PSScriptRoot\Exchange\Get shared mailboxes from user.ps1" }
