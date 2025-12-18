@@ -16,3 +16,4 @@ done - clear host after exit
 - Add script to extract all users with their manager - output csv file. no manager = missing (Chris)
 
 - Bulk import users - comment out "expected Azure AD CSV format with columns" - unless error
+- Import DL members - add possibility to view csv file before adding
