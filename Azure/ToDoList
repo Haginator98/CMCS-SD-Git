@@ -17,3 +17,10 @@ done - clear host after exit
 
 - Bulk import users - comment out "expected Azure AD CSV format with columns" - unless error
 - Import DL members - add possibility to view csv file before adding
+
+- Sjekke alle DL som en bruker er med i (dynamisk og assigned)
+    ^Legge til skript i tools
+
+- Add new script that changes manager based on street address
+    ^add the possibility to change manager based on other things?
+
