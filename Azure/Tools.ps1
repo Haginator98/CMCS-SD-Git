@@ -11,7 +11,7 @@ $scripts = @(
     @{ Name = "Exchange - Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-Aliasmailbox.ps1" }
     @{ Name = "Exchange - Get shared mailboxes from user"; Path = "$PSScriptRoot\Exchange\Get shared mailboxes from user.ps1" }
     @{ Name = "Exchange - Export all DL members"; Path = "$PSScriptRoot\Exchange\Export all DL members.ps1" }
-    @{ Name = "Exchange - Import DL members from CSV"; Path = "$PSScriptRoot\Exchange\Import DL members.ps1" }
+   # @{ Name = "Exchange - Import DL members from CSV"; Path = "$PSScriptRoot\Exchange\Import DL members.ps1" }
 )
 
 while ($true) {
