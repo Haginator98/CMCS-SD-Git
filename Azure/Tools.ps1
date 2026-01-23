@@ -32,21 +32,17 @@ $scriptCategories = @{
 
 while ($true) {
     Clear-Host
-    Write-Host "
-░██████╗███████╗██████╗░██╗░░░██╗██╗░█████╗░███████╗██████╗░███████╗░██████╗██╗░░██╗
-██╔════╝██╔════╝██╔══██╗██║░░░██║██║██╔══██╗██╔════╝██╔══██╗██╔════╝██╔════╝██║░██╔╝
-╚█████╗░█████╗░░██████╔╝╚██╗░██╔╝██║██║░░╚═╝█████╗░░██║░░██║█████╗░░╚█████╗░█████═╝░
-░╚═══██╗██╔══╝░░██╔══██╗░╚████╔╝░██║██║░░██╗██╔══╝░░██║░░██║██╔══╝░░░╚═══██╗██╔═██╗░
-██████╔╝███████╗██║░░██║░░╚██╔╝░░██║╚█████╔╝███████╗██████╔╝███████╗██████╔╝██║░╚██╗
-╚═════╝░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░╚═╝░╚════╝░╚══════╝╚═════╝░╚══════╝╚═════╝░╚═╝░░╚═╝" -ForegroundColor Cyan
-    Write-Host "Welcome to Servicedesk Tools! - Made by Mr.Hagen" -ForegroundColor Green 
-    Write-Host "Following scripts have been tested, let me know if there is a bug, issue with something or if you got any ideas for scripts to add." -ForegroundColor Yellow
-    Write-Host "Remember that you need PIM activated" -ForegroundColor Red
+    Write-Host "======================================" -ForegroundColor Cyan
+    Write-Host "    SERVICEDESK TOOLS MENU" -ForegroundColor Cyan
+    Write-Host "======================================" -ForegroundColor Cyan
+    Write-Host "Welcome to Servicedesk Tools - An idea by Servicedesk, made by Mr.Hagen - 2025/2026" -ForegroundColor Green 
+    Write-Host "All scripts has been tested. Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
+    Write-Host "Remember that you should probably have User/Exchange PIM activated" -ForegroundColor Red
     Write-Host ""
     Write-Host "Select a category:" -ForegroundColor Yellow
-    Write-Host "1: Entra ID"
-    Write-Host "2: Exchange"
-    Write-Host "3: Licenses"
+    Write-Host "1: Entra ID (Mostly user management)"
+    Write-Host "2: Exchange (Mailboxes and Distribution Lists)"
+    Write-Host "3: Licenses (Manage user licenses)"
 #    Write-Host "4: Teams"
     Write-Host "0: Exit"
 
