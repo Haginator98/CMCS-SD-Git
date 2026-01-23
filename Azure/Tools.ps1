@@ -4,20 +4,20 @@
 # Organize scripts by category
 $scriptCategories = @{
     "Entra" = @(
-        @{ Name = "Change Department"; Path = "$PSScriptRoot\Entra\Change department.ps1" }
-        @{ Name = "Change Street Address"; Path = "$PSScriptRoot\Entra\change street address Entra.ps1" }
-        @{ Name = "Change Dep. Office based on Street Address"; Path = "$PSScriptRoot\Entra\change dep.office based on street address.ps1" }
-        @{ Name = "Bulk import CSV"; Path = "$PSScriptRoot\Entra\Bulk import users.ps1" }
-        @{ Name = "Update users from CSV"; Path = "$PSScriptRoot\Entra\Update users from CSV.ps1" }
+        @{ Name = "Set Department"; Path = "$PSScriptRoot\Entra\Set-Department.ps1" }
+        @{ Name = "Set Street Address"; Path = "$PSScriptRoot\Entra\Set-StreetAddress.ps1" }
+        @{ Name = "Set Department Office by Street Address"; Path = "$PSScriptRoot\Entra\Set-DepartmentOfficeByStreetAddress.ps1" }
+        @{ Name = "Import Entra Users"; Path = "$PSScriptRoot\Entra\Import-EntraUsers.ps1" }
+        @{ Name = "Update Entra Users from CSV"; Path = "$PSScriptRoot\Entra\Update-EntraUsersFromCSV.ps1" }
         @{ Name = "Export Filtered Entra Users"; Path = "$PSScriptRoot\Entra\Export-FilteredEntraUsers.ps1" }
         @{ Name = "Set Manager by Street Address"; Path = "$PSScriptRoot\Entra\Set-ManagerByStreetAddress.ps1" }
     )
     "Exchange" = @(
-        @{ Name = "Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-Aliasmailbox.ps1" }
-        @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get shared mailboxes from user.ps1" }
-        @{ Name = "Export All DL Members"; Path = "$PSScriptRoot\Exchange\Export all DL members.ps1" }
-        @{ Name = "Import DL Members from CSV"; Path = "$PSScriptRoot\Exchange\Import DL members.ps1" }
-        @{ Name = "Import DL Members from CSV (Alternative)"; Path = "$PSScriptRoot\Exchange\Import-DLMembersFromCSV.ps1" }
+        @{ Name = "Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-AliasMailbox.ps1" }
+        @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
+        @{ Name = "Export DL Members"; Path = "$PSScriptRoot\Exchange\Export-DLMembers.ps1" }
+        @{ Name = "Import DL Members"; Path = "$PSScriptRoot\Exchange\Import-DLMembers.ps1" }
+        @{ Name = "Import DL Members from CSV"; Path = "$PSScriptRoot\Exchange\Import-DLMembersFromCSV.ps1" }
         @{ Name = "Import Contacts from CSV"; Path = "$PSScriptRoot\Exchange\Import-ContactsFromCSV.ps1" }
         @{ Name = "Get User Distribution Lists"; Path = "$PSScriptRoot\Exchange\Get-UserDistributionLists.ps1" }
     )
@@ -33,7 +33,7 @@ $scriptCategories = @{
 while ($true) {
     Clear-Host
     Write-Host "======================================" -ForegroundColor Cyan
-    Write-Host "    SERVICEDESK TOOLS MENU" -ForegroundColor Cyan
+    Write-Host "    SERVICEDESK TOOLS - V.0" -ForegroundColor Cyan
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "Welcome to Servicedesk Tools - An idea by Servicedesk, made by Mr.Hagen - 2025/2026" -ForegroundColor Green 
     Write-Host "All scripts has been tested. Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
