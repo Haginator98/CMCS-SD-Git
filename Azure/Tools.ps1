@@ -33,7 +33,7 @@ $scriptCategories = @{
 while ($true) {
     Clear-Host
     Write-Host "======================================" -ForegroundColor Cyan
-    Write-Host "    SERVICEDESK TOOLS - V.0" -ForegroundColor Cyan
+    Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "Welcome to Servicedesk Tools - An idea by Servicedesk, made by Mr.Hagen - 2025/2026" -ForegroundColor Green 
     Write-Host "All scripts has been tested. Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
