@@ -1,6 +1,32 @@
 #This script is used to choose what script to run in Azure AD / Exchange environment
 #Made by Mr. Hagen - 2025
 
+# Check and install required modules
+Write-Host "Checking required modules..." -ForegroundColor Cyan
+$requiredModules = @(
+    "Microsoft.Graph.Users"
+    "Microsoft.Graph.Identity.DirectoryManagement"
+    "Microsoft.Graph.Authentication"
+    "ExchangeOnlineManagement"
+)
+
+foreach ($module in $requiredModules) {
+    if (-not (Get-Module -Name $module -ListAvailable)) {
+        Write-Host "Module '$module' not found. Installing..." -ForegroundColor Yellow
+        try {
+            Install-Module -Name $module -Scope CurrentUser -Force -AllowClobber -ErrorAction Stop
+            Write-Host "Successfully installed $module" -ForegroundColor Green
+        } catch {
+            Write-Host "Failed to install $module. Error: $_" -ForegroundColor Red
+            Write-Host "Please install manually using: Install-Module $module" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "Module '$module' is already installed." -ForegroundColor Green
+    }
+}
+Write-Host "All required modules are ready!" -ForegroundColor Green
+Start-Sleep -Seconds 1
+
 # Organize scripts by category
 $scriptCategories = @{
     "Entra" = @(
