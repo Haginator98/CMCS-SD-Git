@@ -22,11 +22,7 @@ Write-Host "`nConnecting to Exchange Online..." -ForegroundColor Cyan
 Connect-ExchangeOnline | Out-Null
 
 Write-Host "`nThis script will bulk import external contacts from a CSV file." -ForegroundColor Cyan
-Write-Host "The CSV file should have ONE column with header 'Email' containing the email addresses." -ForegroundColor Cyan
-# Write-Host "`nExample CSV format:" -ForegroundColor Yellow
-# Write-Host "Email" -ForegroundColor White
-# Write-Host "contact1@external.com" -ForegroundColor White
-# Write-Host "contact2@external.com" -ForegroundColor White
+Write-Host "Please use the CSV from the CSV Template folder as this has the correct format." -ForegroundColor Cyan
 
 # Prompt for CSV file
 $csvPath = Read-Host "`nEnter the full path to your CSV file (or drag and drop the file here)"
