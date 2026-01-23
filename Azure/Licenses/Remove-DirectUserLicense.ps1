@@ -1,19 +1,7 @@
-# Check if Microsoft.Graph module is installed
-if (-not (Get-Module -ListAvailable -Name Microsoft.Graph.Users)) {
-    Write-Host "Microsoft.Graph.Users module is not installed." -ForegroundColor Red
-    Write-Host "Installing module..." -ForegroundColor Yellow
-    Install-Module Microsoft.Graph.Users -Scope CurrentUser -Force
-}
-
-if (-not (Get-Module -ListAvailable -Name Microsoft.Graph.Identity.DirectoryManagement)) {
-    Write-Host "Microsoft.Graph.Identity.DirectoryManagement module is not installed." -ForegroundColor Red
-    Write-Host "Installing module..." -ForegroundColor Yellow
-    Install-Module Microsoft.Graph.Identity.DirectoryManagement -Scope CurrentUser -Force
-}
-
-# Import required modules
-Import-Module Microsoft.Graph.Users
-Import-Module Microsoft.Graph.Identity.DirectoryManagement
+# Import required modules (installed via Tools.ps1)
+Import-Module Microsoft.Graph.Users -ErrorAction Stop
+Import-Module Microsoft.Graph.Identity.DirectoryManagement -ErrorAction Stop
+Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
 
 # Connect to Microsoft Graph
 Write-Host "`nConnecting to Microsoft Graph..." -ForegroundColor Cyan

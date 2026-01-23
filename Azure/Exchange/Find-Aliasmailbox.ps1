@@ -1,20 +1,5 @@
-# Requires Exchange Online PowerShell V2 module
-# Install-Module -Name ExchangeOnlineManagement -Scope CurrentUser
-
-# Check if ExchangeOnlineManagement module is installed
-$Module = Get-Module -Name ExchangeOnlineManagement -ListAvailable
-if ($Module.Count -eq 0) {
-    Write-Host ExchangeOnlineManagement module is not available -ForegroundColor yellow
-    $Confirm = Read-Host "Are you sure you want to install module? [Y] Yes [N] No"
-    if ($Confirm -match "[yY]") {
-        Install-Module ExchangeOnlineManagement
-    } else {
-        Write-Host ExchangeOnlineManagement module is required. Please install module using Install-Module ExchangeOnlineManagement cmdlet.
-        Exit
-    }
-}
-Write-Host Importing ExchangeOnlineManagement module... -ForegroundColor Yellow
-Import-Module ExchangeOnlineManagement
+# Import required modules (installed via Tools.ps1)
+Import-Module ExchangeOnlineManagement -ErrorAction Stop
 
 # Connect to Exchange Online
 Write-Host "Connecting to Exchange Online..." -ForegroundColor Cyan

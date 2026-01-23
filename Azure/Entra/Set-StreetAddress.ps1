@@ -1,28 +1,7 @@
-# Install-Module Microsoft.Graph -Scope CurrentUser
+# Import required modules (installed via Tools.ps1)
+Import-Module Microsoft.Graph.Users -ErrorAction Stop
+Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
 
-# Log in to Microsoft Graph
-#Connect-MgGraph -Scopes "User.ReadWrite.All"
-
-# Check if Microsoft.Graph module is installed
-$Module = Get-Module -Name Microsoft.Graph -ListAvailable
-if ($Module.Count -eq 0) {
-    Write-Host "Microsoft.Graph module is not available." -ForegroundColor Yellow
-    $Confirm = Read-Host "Are you sure you want to install the module? [Y] Yes [N] No"
-    if ($Confirm -match "[yY]") {
-        Write-Host "Installing Microsoft.Graph module..." -ForegroundColor Cyan
-        Install-Module Microsoft.Graph -Scope CurrentUser -Force
-        if ($?) {
-            Write-Host "Microsoft.Graph module installed successfully." -ForegroundColor Green
-        } else {
-            Write-Host "Failed to install Microsoft.Graph module." -ForegroundColor Red
-            Exit
-        }
-    } else {
-        Write-Host "Microsoft.Graph module is required. Please install it using Install-Module Microsoft.Graph cmdlet."
-        Exit
-    }
-}
-# Do NOT import the module explicitly
 Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
 Connect-MgGraph -Scopes "User.ReadWrite.All" -NoWelcome
 

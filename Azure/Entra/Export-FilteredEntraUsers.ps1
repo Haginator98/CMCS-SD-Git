@@ -1,50 +1,13 @@
-# Check if Microsoft.Graph module is installed
-$Module = Get-Module -Name Microsoft.Graph -ListAvailable
-if ($Module.Count -eq 0) {
-    Write-Host "Microsoft.Graph module is not available." -ForegroundColor Yellow
-    $Confirm = Read-Host "Are you sure you want to install the module? [Y] Yes [N] No"
-    if ($Confirm -match "[yY]") {
-        Write-Host "Installing Microsoft.Graph module..." -ForegroundColor Cyan
-        Install-Module Microsoft.Graph -Scope CurrentUser -Force
-        if ($?) {
-            Write-Host "Microsoft.Graph module installed successfully." -ForegroundColor Green
-        } else {
-            Write-Host "Failed to install Microsoft.Graph module." -ForegroundColor Red
-            Exit
-        }
-    } else {
-        Write-Host "Microsoft.Graph module is required. Please install it using Install-Module Microsoft.Graph cmdlet."
-        Exit
-    }
-}
+# NOTE: This script requires both Graph and Exchange modules
+# To avoid module conflicts, we connect to Exchange FIRST, then Graph
 
-# Check if ExchangeOnlineManagement module is installed
-$ExoModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
-if ($ExoModule.Count -eq 0) {
-    Write-Host "ExchangeOnlineManagement module is not available." -ForegroundColor Yellow
-    $Confirm = Read-Host "This module is needed for accurate shared mailbox filtering. Install it? [Y] Yes [N] No"
-    if ($Confirm -match "[yY]") {
-        Write-Host "Installing ExchangeOnlineManagement module..." -ForegroundColor Cyan
-        Install-Module ExchangeOnlineManagement -Scope CurrentUser -Force
-        if ($?) {
-            Write-Host "ExchangeOnlineManagement module installed successfully." -ForegroundColor Green
-        } else {
-            Write-Host "Failed to install ExchangeOnlineManagement module." -ForegroundColor Red
-            Exit
-        }
-    } else {
-        Write-Host "ExchangeOnlineManagement module is required for accurate filtering. Exiting..." -ForegroundColor Yellow
-        Exit
-    }
-}
+# Connect to Exchange Online first (to avoid version conflicts)
+Write-Host "Signing in to Exchange Online..." -ForegroundColor Cyan
+Connect-ExchangeOnline -ShowBanner:$false
 
 # Connect to Microsoft Graph
 Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
 Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All" -NoWelcome
-
-# Connect to Exchange Online
-Write-Host "Signing in to Exchange Online..." -ForegroundColor Cyan
-Connect-ExchangeOnline -ShowBanner:$false
 
 # Export all users with their managers to a CSV file
 Write-Host "`n========================================" -ForegroundColor Cyan
@@ -258,8 +221,8 @@ if ($filterSuffix -ne "") {
     }
 }
 
-# Export to CSV with BOM to ensure proper display of Norwegian characters (æ, ø, å) in Excel
-$output | Export-Csv -Path $exportPath -NoTypeInformation -Encoding UTF8BOM
+# Export to CSV with UTF8 encoding to ensure proper display of Norwegian characters (æ, ø, å) in Excel
+$output | Export-Csv -Path $exportPath -NoTypeInformation -Encoding UTF8
 Write-Host "`n========================================" -ForegroundColor Green
 Write-Host "Export completed successfully!" -ForegroundColor Green
 Write-Host "========================================" -ForegroundColor Green

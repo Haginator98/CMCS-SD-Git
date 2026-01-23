@@ -61,12 +61,9 @@ Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "Dynamics 365 License Cost Optimization" -ForegroundColor Cyan
 Write-Host "========================================`n" -ForegroundColor Cyan
 
-# Check if Microsoft.Graph module is installed
-if (-not (Get-Module -ListAvailable -Name Microsoft.Graph.Users)) {
-    Write-Host "Microsoft.Graph.Users module is not installed." -ForegroundColor Red
-    Write-Host "Install it with: Install-Module Microsoft.Graph.Users -Scope CurrentUser" -ForegroundColor Yellow
-    exit
-}
+# Import required modules (installed via Tools.ps1)
+Import-Module Microsoft.Graph.Users -ErrorAction Stop
+Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
 
 # Connect to Microsoft Graph
 Write-Host "Connecting to Microsoft Graph..." -ForegroundColor Yellow
@@ -375,7 +372,7 @@ if ($results.Count -gt 0) {
     $exportConfirmation = Read-Host "Do you want to export the results to CSV? [Y] Yes [N] No"
     if ($exportConfirmation -match "[yY]") {
         Write-Host "`nExporting results to CSV..." -ForegroundColor Yellow
-        $results | Export-Csv -Path $ExportPath -NoTypeInformation -Encoding UTF8BOM
+        $results | Export-Csv -Path $ExportPath -NoTypeInformation -Encoding UTF8
         Write-Host "Results exported to: $ExportPath" -ForegroundColor Green
     }
     else {

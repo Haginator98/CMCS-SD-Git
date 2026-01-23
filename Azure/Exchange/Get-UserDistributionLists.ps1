@@ -1,21 +1,5 @@
-# Check if ExchangeOnlineManagement module is installed
-$Module = Get-Module -Name ExchangeOnlineManagement -ListAvailable
-if ($Module.Count -eq 0) {
-    Write-Host "ExchangeOnlineManagement module is not available" -ForegroundColor Yellow
-    $Confirm = Read-Host "Do you want to install the module? [Y] Yes [N] No"
-    if ($Confirm -match "[yY]") {
-        Write-Host "Installing ExchangeOnlineManagement module..." -ForegroundColor Cyan
-        Install-Module ExchangeOnlineManagement -Scope CurrentUser -Force
-        Write-Host "Module installed successfully!" -ForegroundColor Green
-    } else {
-        Write-Host "ExchangeOnlineManagement module is required. Please install it using: Install-Module ExchangeOnlineManagement" -ForegroundColor Red
-        Exit
-    }
-}
-
-# Import module
-Write-Host "Importing ExchangeOnlineManagement module..." -ForegroundColor Cyan
-Import-Module ExchangeOnlineManagement
+# Import required modules (installed via Tools.ps1)
+Import-Module ExchangeOnlineManagement -ErrorAction Stop
 
 # Connect to Exchange Online
 Write-Host "`nConnecting to Exchange Online..." -ForegroundColor Cyan

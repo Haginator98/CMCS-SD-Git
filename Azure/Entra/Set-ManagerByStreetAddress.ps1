@@ -1,3 +1,8 @@
+# Import required modules (installed via Tools.ps1)
+Import-Module Microsoft.Graph.Users -ErrorAction Stop
+Import-Module Microsoft.Graph.Identity.DirectoryManagement -ErrorAction Stop
+Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
+
 # Connect to Microsoft Graph
 Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
 Connect-MgGraph -Scopes "User.ReadWrite.All" -NoWelcome

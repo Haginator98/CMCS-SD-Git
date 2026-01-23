@@ -1,9 +1,6 @@
-# Import Microsoft Graph module if not already imported
-#if (-not (Get-Module -ListAvailable -Name Microsoft.Graph)) {
-#    Write-Host "Microsoft.Graph module not found. Installing..." -ForegroundColor Yellow
-#    Install-Module Microsoft.Graph -Scope CurrentUser -Force
-#}
-#Import-Module Microsoft.Graph
+# Import required modules (installed via Tools.ps1)
+Import-Module Microsoft.Graph.Users -ErrorAction Stop
+Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
 
 # Prompt user to sign in to Microsoft Graph
 Write-Host "Signing in to Microsoft Graph..." -ForegroundColor Cyan
