@@ -26,8 +26,8 @@ $scriptCategories = @{
         @{ Name = "Remove Direct User License"; Path = "$PSScriptRoot\Licenses\Remove-DirectUserLicense.ps1" }
     )
 #    "Teams" = @(
-        @{ Name = "Teams Reports"; Path = "$PSScriptRoot\Teams\TeamsReports.ps1" }
-    )
+#        @{ Name = "Teams Reports"; Path = "$PSScriptRoot\Teams\TeamsReports.ps1" }
+#    )
 }
 
 while ($true) {
