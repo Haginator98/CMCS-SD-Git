@@ -90,12 +90,15 @@ while ($true) {
         
         while ($true) {
             Clear-Host
-            Write-Host "=== $selectedCategory Scripts ===" -ForegroundColor Cyan
+            Write-Host "======================================" -ForegroundColor Cyan
+            Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
+            Write-Host "======================================" -ForegroundColor Cyan
+            Write-Host "=== $selectedCategory Scripts ===" -ForegroundColor Yellow
             Write-Host ""
             for ($i = 0; $i -lt $scripts.Count; $i++) {
                 Write-Host "$($i+1): $($scripts[$i].Name)"
             }
-            Write-Host "0: Back to main menu"
+            Write-Host "0: Back to main menu" -ForegroundColor Yellow
 
             $choice = Read-Host "Enter the number of the script to run"
             
