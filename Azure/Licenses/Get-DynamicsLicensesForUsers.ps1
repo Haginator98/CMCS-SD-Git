@@ -62,6 +62,7 @@ Write-Host "Dynamics 365 License Cost Optimization" -ForegroundColor Cyan
 Write-Host "========================================`n" -ForegroundColor Cyan
 
 # Import required modules (installed via Tools.ps1)
+Write-Host "Importing required modules..." -ForegroundColor Yellow
 Import-Module Microsoft.Graph.Users -ErrorAction Stop
 Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
 
