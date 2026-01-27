@@ -1,4 +1,5 @@
 # Import required modules (installed via Tools.ps1)
+Write-Host "Importing required modules..." -ForegroundColor Cyan
 Import-Module Microsoft.Graph.Users -ErrorAction Stop
 Import-Module Microsoft.Graph.Identity.DirectoryManagement -ErrorAction Stop
 Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
