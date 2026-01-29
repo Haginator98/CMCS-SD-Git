@@ -25,6 +25,44 @@ foreach ($module in $requiredModules) {
     }
 }
 Write-Host "All required modules are ready!" -ForegroundColor Green
+
+# Check for module updates
+Write-Host "`nChecking for module updates..." -ForegroundColor Cyan
+$updatesAvailable = $false
+$updateInfo = @()
+
+foreach ($module in $requiredModules) {
+    $installedModule = Get-InstalledModule -Name $module -ErrorAction SilentlyContinue
+    if ($installedModule) {
+        $onlineModule = Find-Module -Name $module -ErrorAction SilentlyContinue
+        if ($onlineModule -and ($onlineModule.Version -gt $installedModule.Version)) {
+            Write-Host "⚠ $module update available: $($installedModule.Version) → $($onlineModule.Version)" -ForegroundColor Yellow
+            $updatesAvailable = $true
+            $updateInfo += $module
+        } else {
+            Write-Host "✓ $module is up to date ($($installedModule.Version))" -ForegroundColor Green
+        }
+    }
+}
+
+if ($updatesAvailable) {
+    Write-Host "`nWould you like to update the modules now?" -ForegroundColor Yellow
+    $updateChoice = Read-Host "[Y] Yes [N] No (continue with current versions)"
+    if ($updateChoice -match "[yY]") {
+        Write-Host "Updating modules... (this may take a few minutes)" -ForegroundColor Cyan
+        foreach ($module in $updateInfo) {
+            Write-Host "Updating $module..." -ForegroundColor Gray
+            Update-Module $module -Force -ErrorAction SilentlyContinue
+        }
+        Write-Host "✓ Modules updated successfully" -ForegroundColor Green
+        Write-Host "Please restart the script to use the updated modules." -ForegroundColor Yellow
+        Start-Sleep -Seconds 3
+        Exit
+    }
+} else {
+    Write-Host "✓ All modules are up to date" -ForegroundColor Green
+}
+
 Start-Sleep -Seconds 1
 
 # Organize scripts by category
