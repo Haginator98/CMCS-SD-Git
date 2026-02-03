@@ -84,6 +84,7 @@ $scriptCategories = @{
         @{ Name = "Import DL Members from CSV"; Path = "$PSScriptRoot\Exchange\Import-DLMembersFromCSV.ps1" }
         @{ Name = "Import Contacts from CSV"; Path = "$PSScriptRoot\Exchange\Import-ContactsFromCSV.ps1" }
         @{ Name = "Get User Distribution Lists"; Path = "$PSScriptRoot\Exchange\Get-UserDistributionLists.ps1" }
+        @{ Name = "Get Room Mailbox Settings"; Path = "$PSScriptRoot\Exchange\Get-RoomMailboxSettings.ps1" }
     )
     "Licenses" = @(
         @{ Name = "Get Dynamics Licenses for Users"; Path = "$PSScriptRoot\Licenses\Get-DynamicsLicensesForUsers.ps1" }
