@@ -28,53 +28,47 @@ Write-Host "You will be prompted to enter new values for Department and Office L
 $newDepartment = Read-Host "Enter the new department name to be set" 
 $newOffice = Read-Host "Enter the new office location to be set"
 
-# Fetch all users with required properties
-#$allUsers = Get-MgUser -All -Property "displayName,streetAddress,department,officeLocation,userPrincipalName,id"
-
-# Filter users where streetAddress is exactly "8410"
+# Filter users where streetAddress matches target
 $usersToUpdate = $allUsers | Where-Object { $_.StreetAddress -eq $targetStreet }
 
 if ($usersToUpdate.Count -eq 0) {
     Write-Host "No users found with street address '$targetStreet'" -ForegroundColor Yellow
+    Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
+    Disconnect-MgGraph | Out-Null
+    return
 } else {
     Write-Host "Found $($usersToUpdate.Count) users with street address '$targetStreet'" -ForegroundColor Cyan
+    Write-Host "`nUsers to be updated:" -ForegroundColor Yellow
+    $usersToUpdate | Select-Object UserPrincipalName, DisplayName, StreetAddress, @{Name='Department';Expression={if($_.Department){$_.Department}else{"no department"}}}, @{Name='Office';Expression={if($_.OfficeLocation){$_.OfficeLocation}else{"no office"}}} | Format-Table
 
-    Write-Host "Are you sure you want to set Department '$newDepartment' and OfficeLocation '$newOffice' for $($usersToUpdate.Count) users? (y = yes, n = no, l = list users)" -ForegroundColor Yellow
-    $ready = $false
-    while (-not $ready) {
-        $confirm = Read-Host "(y = yes, n = no, l = list users)"
-        switch ($confirm.ToLower()) {
-            'y' {
-                $ready = $true
-            }
-            'n' {
-                Write-Host "Operation cancelled. Exiting script" -ForegroundColor Red
-                Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
-                Disconnect-MgGraph | Out-Null
-                Write-Host "Disconnected. Script finished." -ForegroundColor Green
-                Start-Sleep -Seconds 2
-                return
-            }
-            'l' {
-                Write-Host "Users to be updated:" -ForegroundColor Cyan
-                $usersToUpdate | Select-Object UserPrincipalName, DisplayName, StreetAddress, Department, OfficeLocation | Format-Table
-            }
-            default {
-                Write-Host "Please enter y (yes), n (no), or l (list users)." -ForegroundColor Yellow
-            }
-        }
+    Write-Host "`n========================================" -ForegroundColor Yellow
+    Write-Host "CONFIRMATION" -ForegroundColor Yellow
+    Write-Host "========================================" -ForegroundColor Yellow
+    Write-Host "Department will be set to: $newDepartment" -ForegroundColor Cyan
+    Write-Host "Office will be set to: $newOffice" -ForegroundColor Cyan
+    Write-Host "Number of users to update: $($usersToUpdate.Count)" -ForegroundColor Cyan
+    $confirm = Read-Host "`nDo you want to proceed with these changes? [Y] Yes [N] No"
+    
+    if ($confirm -notmatch "[yY]") {
+        Write-Host "Operation cancelled by user." -ForegroundColor Yellow
+        Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
+        Disconnect-MgGraph | Out-Null
+        return
     }
 
+    $counter = 0
     foreach ($user in $usersToUpdate) {
-        Write-Host "Updating $($user.UserPrincipalName)..."
+        $counter++
+        Write-Progress -Activity "Updating users" -Status "Processing $counter of $($usersToUpdate.Count)" -PercentComplete (($counter / $usersToUpdate.Count) * 100)
+        Write-Host "Updating $($user.UserPrincipalName)..." -ForegroundColor Cyan
 
         Update-MgUser -UserId $user.Id `
             -Department $newDepartment `
             -OfficeLocation $newOffice
     }
+    Write-Progress -Activity "Updating users" -Completed
 
-    Write-Host "All matching users have been updated." -ForegroundColor Green
-    Start-Sleep -Seconds 1
+    Write-Host "`n[SUCCESS] All $($usersToUpdate.Count) users have been updated." -ForegroundColor Green
 }
 
 Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
