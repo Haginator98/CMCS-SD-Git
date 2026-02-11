@@ -75,4 +75,3 @@ Write-Host "Disconnecting from Microsoft Graph..." -ForegroundColor Cyan
 Disconnect-MgGraph | Out-Null
 Write-Host "Disconnected. Script finished." -ForegroundColor Green
 Start-Sleep -Seconds 2
-Clear-Host
