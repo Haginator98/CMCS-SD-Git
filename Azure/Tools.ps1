@@ -111,7 +111,8 @@ while ($true) {
     Write-Host "1: Entra ID (Mostly user management)"
     Write-Host "2: Exchange (Mailboxes and Distribution Lists)"
     Write-Host "3: Licenses (Manage user licenses)"
-#    Write-Host "4: Teams"
+    Write-Host "4: On-Prem (Tools for on-premises Exchange environments)"
+    #Write-Host "5: Teams"
     Write-Host "0: Exit"
 
     $categoryChoice = Read-Host "Enter the number of the category"
