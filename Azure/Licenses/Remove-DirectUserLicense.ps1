@@ -1,8 +1,33 @@
-# Import required modules (installed via Tools.ps1)
-Write-Host "Importing required modules..." -ForegroundColor Cyan
-Import-Module Microsoft.Graph.Users -ErrorAction Stop
-Import-Module Microsoft.Graph.Identity.DirectoryManagement -ErrorAction Stop
-Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
+# Remove any previously loaded Graph modules to avoid version conflicts
+Get-Module Microsoft.Graph* | Remove-Module -Force
+
+# Import only required modules for license management with loading animation
+$modules = @(
+    'Microsoft.Graph.Authentication',
+    'Microsoft.Graph.Users',
+    'Microsoft.Graph.Identity.DirectoryManagement',
+    'Microsoft.Graph.Users.Actions'
+)
+
+$dots = @('.', '..', '...', '..')
+$dotIndex = 0
+
+try {
+    foreach ($module in $modules) {
+        Write-Host "`rImporting required modules$($dots[$dotIndex % 4])    " -ForegroundColor Cyan -NoNewline
+        $dotIndex++
+        Import-Module $module -RequiredVersion 2.34.0 -ErrorAction Stop
+    }
+    Write-Host "`rAll modules loaded successfully.                    " -ForegroundColor Green
+}
+catch {
+    Write-Host "`rError loading modules. Trying without version specification...    " -ForegroundColor Yellow
+    # Fallback: Load without specific version
+    foreach ($module in $modules) {
+        Import-Module $module -ErrorAction Stop
+    }
+    Write-Host "All modules loaded successfully.                    " -ForegroundColor Green
+}
 
 # Connect to Microsoft Graph
 Write-Host "`nConnecting to Microsoft Graph..." -ForegroundColor Cyan
