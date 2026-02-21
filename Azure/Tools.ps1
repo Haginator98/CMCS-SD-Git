@@ -69,7 +69,7 @@ Start-Sleep -Seconds 1
 $scriptCategories = @{
     "Entra" = @(
         @{ Name = "Set Department"; Path = "$PSScriptRoot\Entra\Replace-Department.ps1" }
-        @{ Name = "Set Street Address"; Path = "$PSScriptRoot\Entra\Set-StreetAddress.ps1" }
+        @{ Name = "Set Street Address"; Path = "$PSScriptRoot\Entra\Replace-StreetAddress.ps1" }
         @{ Name = "Set Department Office by Street Address"; Path = "$PSScriptRoot\Entra\Set-DepartmentOfficeByStreetAddress.ps1" }
         @{ Name = "Import Entra Users"; Path = "$PSScriptRoot\Entra\Import-EntraUsers.ps1" }
         @{ Name = "Update Entra Users from CSV"; Path = "$PSScriptRoot\Entra\Update-EntraUsersFromCSV.ps1" }
