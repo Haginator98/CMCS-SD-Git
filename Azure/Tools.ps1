@@ -93,6 +93,9 @@ $scriptCategories = @{
 #    "Teams" = @(
 #        @{ Name = "Teams Reports"; Path = "$PSScriptRoot\Teams\TeamsReports.ps1" }
 #    )
+    "On-Prem" = @(
+        @{ Name = "Convert On-Prem DL to Cloud"; Path = "$PSScriptRoot\On-Prem\Convert-OnPremDLToCloud.ps1" }
+    )
 }
 
 while ($true) {
@@ -120,7 +123,8 @@ while ($true) {
         '1' { "Entra" }
         '2' { "Exchange" }
         '3' { "Licenses" }
-    #    '4' { "Teams" }
+        '4' { "On-Prem" }
+        #'5' { "Teams" }
         default { $null }
     }
 
