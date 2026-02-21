@@ -75,7 +75,7 @@ $scriptCategories = @{
         @{ Name = "Update Entra Users from CSV"; Path = "$PSScriptRoot\Entra\Update-EntraUsersFromCSV.ps1" }
         @{ Name = "Export Filtered Entra Users"; Path = "$PSScriptRoot\Entra\Export-FilteredEntraUsers.ps1" }
         @{ Name = "Set Manager by Street Address"; Path = "$PSScriptRoot\Entra\Set-ManagerByStreetAddress.ps1" }
-    )
+    )    
     "Exchange" = @(
         @{ Name = "Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-AliasMailbox.ps1" }
         @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
