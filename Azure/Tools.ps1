@@ -2,12 +2,14 @@
 #Made by Mr. Hagen - 2025
 
 # Check and install required modules
+Clear-Host
 Write-Host "Checking required modules..." -ForegroundColor Cyan
 $requiredModules = @(
     "Microsoft.Graph.Users"
     "Microsoft.Graph.Identity.DirectoryManagement"
     "Microsoft.Graph.Authentication"
     "ExchangeOnlineManagement"
+    "MicrosoftTeams"
 )
 
 foreach ($module in $requiredModules) {
@@ -68,31 +70,33 @@ Start-Sleep -Seconds 1
 # Organize scripts by category
 $scriptCategories = @{
     "Entra" = @(
-        @{ Name = "Set Department"; Path = "$PSScriptRoot\Entra\Replace-Department.ps1" }
-        @{ Name = "Set Street Address"; Path = "$PSScriptRoot\Entra\Replace-StreetAddress.ps1" }
-        @{ Name = "Set Department Office by Street Address"; Path = "$PSScriptRoot\Entra\Set-DepartmentOfficeByStreetAddress.ps1" }
+        @{ Name = "Replace Department"; Path = "$PSScriptRoot\Entra\Replace-Department.ps1" }
+        @{ Name = "Replace Street Address"; Path = "$PSScriptRoot\Entra\Replace-StreetAddress.ps1" }
+        @{ Name = "Set Department/Office by Street Address"; Path = "$PSScriptRoot\Entra\Set-DepartmentOfficeByStreetAddress.ps1" }
+        @{ Name = "Set Manager by Street Address"; Path = "$PSScriptRoot\Entra\Set-ManagerByStreetAddress.ps1" }
         @{ Name = "Import Entra Users"; Path = "$PSScriptRoot\Entra\Import-EntraUsers.ps1" }
         @{ Name = "Update Entra Users from CSV"; Path = "$PSScriptRoot\Entra\Update-EntraUsersFromCSV.ps1" }
         @{ Name = "Export Filtered Entra Users"; Path = "$PSScriptRoot\Entra\Export-FilteredEntraUsers.ps1" }
-        @{ Name = "Set Manager by Street Address"; Path = "$PSScriptRoot\Entra\Set-ManagerByStreetAddress.ps1" }
+        @{ Name = "Check Department Keywords"; Path = "$PSScriptRoot\Entra\Check-DepartmentKeywords.ps1" }
+        
     )    
     "Exchange" = @(
         @{ Name = "Find Alias Mailbox"; Path = "$PSScriptRoot\Exchange\Find-AliasMailbox.ps1" }
-        @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
         @{ Name = "Export DL Members"; Path = "$PSScriptRoot\Exchange\Export-DLMembers.ps1" }
         @{ Name = "Import DL Members"; Path = "$PSScriptRoot\Exchange\Import-DLMembers.ps1" }
         @{ Name = "Import DL Members from CSV"; Path = "$PSScriptRoot\Exchange\Import-DLMembersFromCSV.ps1" }
         @{ Name = "Import Contacts from CSV"; Path = "$PSScriptRoot\Exchange\Import-ContactsFromCSV.ps1" }
         @{ Name = "Get User Distribution Lists"; Path = "$PSScriptRoot\Exchange\Get-UserDistributionLists.ps1" }
         @{ Name = "Get Room Mailbox Settings"; Path = "$PSScriptRoot\Exchange\Get-RoomMailboxSettings.ps1" }
+        @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
     )
     "Licenses" = @(
         @{ Name = "Get Dynamics Licenses for Users"; Path = "$PSScriptRoot\Licenses\Get-DynamicsLicensesForUsers.ps1" }
         @{ Name = "Remove Direct User License"; Path = "$PSScriptRoot\Licenses\Remove-DirectUserLicense.ps1" }
     )
-#    "Teams" = @(
-#        @{ Name = "Teams Reports"; Path = "$PSScriptRoot\Teams\TeamsReports.ps1" }
-#    )
+    "Teams" = @(
+        @{ Name = "Teams Reporting Tool"; Path = "$PSScriptRoot\Teams\Teams-Reporting.ps1" }
+    )
     "On-Prem" = @(
         @{ Name = "Convert On-Prem DL to Cloud"; Path = "$PSScriptRoot\On-Prem\Convert-OnPremDLToCloud.ps1" }
     )
@@ -105,14 +109,14 @@ while ($true) {
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "Welcome to Servicedesk Tools - An idea by Servicedesk, made by Mr.Hagen - 2025/2026" -ForegroundColor Green 
     Write-Host "All scripts has been tested. Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
-    Write-Host "Remember that you should probably have User/Exchange PIM activated" -ForegroundColor Red
+    Write-Host "Remember that you need to have PIM activated. Recommended to activate User/Exchange PIM." -ForegroundColor Red
     Write-Host ""
     Write-Host "Select a category:" -ForegroundColor Yellow
     Write-Host "1: Entra ID (Mostly user management)"
     Write-Host "2: Exchange (Mailboxes and Distribution Lists)"
     Write-Host "3: Licenses (Manage user licenses)"
     Write-Host "4: On-Prem (Tools for on-premises Exchange environments)"
-    #Write-Host "5: Teams"
+    Write-Host "5: Teams (Teams groups and channels reporting)"
     Write-Host "0: Exit"
 
     $categoryChoice = Read-Host "Enter the number of the category"
@@ -125,12 +129,12 @@ while ($true) {
         '2' { "Exchange" }
         '3' { "Licenses" }
         '4' { "On-Prem" }
-        #'5' { "Teams" }
+        '5' { "Teams" }
         default { $null }
     }
 
     if ($selectedCategory -and $scriptCategories.ContainsKey($selectedCategory)) {
-        $scripts = $scriptCategories[$selectedCategory]
+        $scripts = $scriptCategories[$selectedCategory] | Sort-Object Name
         
         while ($true) {
             Clear-Host
@@ -148,6 +152,7 @@ while ($true) {
             
             if ($choice -eq '0') { break }
             if ($choice -eq 'back') { break }
+            if ($choice -eq 'exit') { break }
             
             if ($choice -match '^[1-9][0-9]*$' -and $choice -le $scripts.Count) {
                 $scriptToRun = $scripts[$choice-1].Path
