@@ -108,7 +108,7 @@ while ($true) {
     Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "Welcome to Servicedesk Tools - An idea by Servicedesk, made by Mr.Hagen - 2025/2026" -ForegroundColor Green 
-    Write-Host "All scripts has been tested. Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
+    Write-Host "Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
     Write-Host "Remember that you need to have PIM activated. Recommended to activate User/Exchange PIM." -ForegroundColor Red
     Write-Host ""
     Write-Host "Select a category:" -ForegroundColor Yellow
@@ -156,7 +156,10 @@ while ($true) {
             
             if ($choice -match '^[1-9][0-9]*$' -and $choice -le $scripts.Count) {
                 $scriptToRun = $scripts[$choice-1].Path
+                Write-Host ""
+                Write-Host "======================================" -ForegroundColor Cyan
                 Write-Host "Running $($scripts[$choice-1].Name)..." -ForegroundColor Cyan
+                Write-Host "======================================" -ForegroundColor Cyan
                 & $scriptToRun
                 Write-Host "`nScript finished. Press any key to return to menu..." -ForegroundColor Yellow
                 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
