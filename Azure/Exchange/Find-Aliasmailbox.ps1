@@ -26,5 +26,4 @@ if ($Mailboxes) {
 Write-Host "Disconnecting from Exchange Online..." -ForegroundColor Cyan
 Disconnect-ExchangeOnline -Confirm:$false
 Write-Host "Disconnected. Script finished." -ForegroundColor Green
-Start-Sleep -Seconds 3
-Clear-Host
+Start-Sleep -Seconds 2
