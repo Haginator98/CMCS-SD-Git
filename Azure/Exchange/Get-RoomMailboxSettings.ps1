@@ -177,6 +177,7 @@ try {
     $modifyChoice = Read-Host "Do you want to modify settings for this room? [Y] Yes [N] No"
     if ($modifyChoice -match "[yY]") {
         
+        do {
         Write-Host "`nModifying settings for: $($roomInfo.DisplayName)" -ForegroundColor Cyan
         Write-Host "========================================" -ForegroundColor Cyan
         Write-Host "[1] AutomateProcessing (Current: $($roomInfo.AutomateProcessing))" -ForegroundColor White
@@ -274,6 +275,11 @@ try {
                 Write-Host "Invalid selection." -ForegroundColor Red
             }
         }
+
+        if ($settingChoice -ne "0") {
+            $continueChoice = Read-Host "`nDo you want to make another change to this room? [Y] Yes [N] No"
+        }
+        } while ($settingChoice -ne "0" -and $continueChoice -match "[yY]")
     }
 }
 finally {
