@@ -78,6 +78,7 @@ $scriptCategories = @{
         @{ Name = "Update Entra Users from CSV"; Path = "$PSScriptRoot\Entra\Update-EntraUsersFromCSV.ps1" }
         @{ Name = "Export Filtered Entra Users"; Path = "$PSScriptRoot\Entra\Export-FilteredEntraUsers.ps1" }
         @{ Name = "Check Department Keywords"; Path = "$PSScriptRoot\Entra\Check-DepartmentKeywords.ps1" }
+        @{ Name = "Replace Office Location"; Path = "$PSScriptRoot\Entra\Replace-OfficeLocation.ps1" }
         
     )    
     "Exchange" = @(
@@ -89,6 +90,8 @@ $scriptCategories = @{
         @{ Name = "Get User Distribution Lists"; Path = "$PSScriptRoot\Exchange\Get-UserDistributionLists.ps1" }
         @{ Name = "Get Room Mailbox Settings"; Path = "$PSScriptRoot\Exchange\Get-RoomMailboxSettings.ps1" }
         @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
+        @{ Name = "Compare UPN and Primary Email"; Path = "$PSScriptRoot\Exchange\Compare-UPNandPrimaryEmail.ps1" }
+        @{ Name = "New Dynamic Distribution List"; Path = "$PSScriptRoot\Exchange\New-DynamicDistributionList.ps1" }
     )
     "Licenses" = @(
         @{ Name = "Get Dynamics Licenses for Users"; Path = "$PSScriptRoot\Licenses\Get-DynamicsLicensesForUsers.ps1" }

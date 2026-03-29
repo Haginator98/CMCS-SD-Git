@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 import customtkinter as ctk
@@ -9,16 +8,19 @@ from script_registry import (
     CATEGORY_ICONS,
     get_script_path,
     script_exists,
+    find_pwsh,
 )
 from terminal_widget import TerminalWidget
 from module_checker import ModuleChecker
+from github_sync import GitHubSyncer
+from update_checker import check_for_update, open_releases_page
 
 
 class ServicedeskApp(ctk.CTk):
     """Main application window for Servicedesk Tools."""
 
     APP_TITLE = "Servicedesk Tools"
-    APP_VERSION = "1.0"
+    APP_VERSION = "0.9"
 
     def __init__(self):
         super().__init__()
@@ -31,13 +33,20 @@ class ServicedeskApp(ctk.CTk):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
 
-        self.pwsh_path = shutil.which("pwsh") or "pwsh"
+        self.pwsh_path = find_pwsh() or "pwsh"
         self.module_checker = ModuleChecker()
+        self.syncer = GitHubSyncer()
         self._selected_category: str | None = None
         self._category_buttons: dict[str, ctk.CTkButton] = {}
 
         self._build_ui()
         self._check_pwsh()
+
+        # Auto-sync scripts from GitHub on startup
+        self._sync_scripts()
+
+        # Check for app updates
+        check_for_update(self.APP_VERSION, callback=self._on_update_check)
 
     # ──────────────────────────── UI LAYOUT ────────────────────────────
 
@@ -68,6 +77,20 @@ class ServicedeskApp(ctk.CTk):
             font=ctk.CTkFont(size=11),
             text_color="#6c7086",
         ).pack(anchor="w", pady=(2, 0))
+
+        # Update banner (hidden by default)
+        self.update_banner = ctk.CTkButton(
+            self.sidebar,
+            text="",
+            font=ctk.CTkFont(size=11, weight="bold"),
+            height=32,
+            corner_radius=8,
+            fg_color="#fab387",
+            hover_color="#e8a070",
+            text_color="#1e1e2e",
+            command=open_releases_page,
+        )
+        # Not packed yet — shown only when update is available
 
         # Separator
         ctk.CTkFrame(self.sidebar, height=1, fg_color="#313244").pack(fill="x", padx=16, pady=(12, 8))
@@ -101,6 +124,20 @@ class ServicedeskApp(ctk.CTk):
 
         # Spacer
         ctk.CTkFrame(self.sidebar, fg_color="transparent").pack(fill="both", expand=True)
+
+        # Sync button
+        self.sync_btn = ctk.CTkButton(
+            self.sidebar,
+            text="🔄  Sync Scripts",
+            font=ctk.CTkFont(size=12),
+            height=34,
+            corner_radius=8,
+            fg_color="#313244",
+            hover_color="#45475a",
+            text_color="#a6adc8",
+            command=self._sync_scripts,
+        )
+        self.sync_btn.pack(fill="x", padx=12, pady=(4, 4))
 
         # Module status button at bottom
         self.module_status_btn = ctk.CTkButton(
@@ -181,7 +218,7 @@ class ServicedeskApp(ctk.CTk):
         self.terminal.append_output(
             "Welcome to Servicedesk Tools!\n"
             "An idea by Servicedesk, made by Mr. Hagen — 2025/2026\n\n"
-            "Select a category from the sidebar, then click a script to run it.\n"
+            "Scripts are synced from GitHub on startup.\n"
             "Remember: You need to have PIM activated (User/Exchange PIM recommended).\n"
         )
 
@@ -267,8 +304,10 @@ class ServicedeskApp(ctk.CTk):
         self.terminal.run_script(script_path, self.pwsh_path)
 
     def _check_pwsh(self):
-        if shutil.which("pwsh"):
-            self.pwsh_label.configure(text="✅ pwsh found", text_color="#a6e3a1")
+        pwsh = find_pwsh()
+        if pwsh:
+            self.pwsh_path = pwsh
+            self.pwsh_label.configure(text=f"✅ pwsh found", text_color="#a6e3a1")
         else:
             self.pwsh_label.configure(text="❌ pwsh not found — install PowerShell", text_color="#f38ba8")
 
@@ -304,3 +343,37 @@ class ServicedeskApp(ctk.CTk):
                 )
 
         self.after(0, _update)
+
+    # ──────────────────────────── GITHUB SYNC ────────────────────────────
+
+    def _sync_scripts(self):
+        """Sync scripts from GitHub."""
+        self.terminal.clear_output()
+        self.sync_btn.configure(state="disabled", text="🔄  Syncing...")
+
+        def _on_progress(msg):
+            self.terminal.append_output(msg)
+
+        def _on_done(success, msg):
+            def _update():
+                self.terminal.append_output(f"\n{msg}\n")
+                self.sync_btn.configure(state="normal", text="🔄  Sync Scripts")
+                # Refresh the current category view if one is selected
+                if self._selected_category:
+                    self._select_category(self._selected_category)
+            self.after(0, _update)
+
+        self.syncer.sync(progress_callback=_on_progress, done_callback=_on_done)
+
+    # ──────────────────────────── UPDATE CHECK ────────────────────────────
+
+    def _on_update_check(self, has_update, latest_tag, download_url, message):
+        """Called when the update check completes."""
+        if not has_update:
+            return
+
+        def _show():
+            self.update_banner.configure(text=f"⬆ Update available: {latest_tag}")
+            self.update_banner.pack(fill="x", padx=12, pady=(6, 0), before=self.sidebar.winfo_children()[2])
+            self.terminal.append_output(f"\n{message}\nClick the banner in the sidebar to download.\n")
+        self.after(0, _show)

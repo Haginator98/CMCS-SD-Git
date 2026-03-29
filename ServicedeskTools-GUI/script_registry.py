@@ -1,19 +1,44 @@
 import os
+import shutil
+import sys
 from pathlib import Path
+
+# Common install locations for PowerShell on macOS and Windows
+_PWSH_SEARCH_PATHS = [
+    "/usr/local/bin/pwsh",
+    "/opt/homebrew/bin/pwsh",
+    "/usr/local/microsoft/powershell/7/pwsh",
+    os.path.expanduser("~/.dotnet/tools/pwsh"),
+    r"C:\Program Files\PowerShell\7\pwsh.exe",
+    r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+]
+
+
+def find_pwsh() -> str | None:
+    """Find the PowerShell executable, checking PATH and known install locations."""
+    found = shutil.which("pwsh")
+    if found:
+        return found
+    for path in _PWSH_SEARCH_PATHS:
+        if os.path.isfile(path) and os.access(path, os.X_OK):
+            return path
+    return None
+
+
+# Scripts root is always the GitHub-synced cache
+_SCRIPTS_CACHE = Path.home() / ".servicedesk-tools" / "scripts" / "Azure"
 
 
 def get_azure_scripts_root() -> Path:
-    """Resolve the Azure scripts root directory (sibling to ServicedeskTools-GUI)."""
-    gui_dir = Path(__file__).resolve().parent
-    repo_root = gui_dir.parent
-    azure_root = repo_root / "Azure"
-    return azure_root
+    """Return the cached scripts directory (synced from GitHub)."""
+    return _SCRIPTS_CACHE
 
 
 SCRIPT_CATEGORIES: dict[str, list[dict[str, str]]] = {
     "Entra": [
         {"name": "Replace Department", "script": "Entra/Replace-Department.ps1"},
         {"name": "Replace Street Address", "script": "Entra/Replace-StreetAddress.ps1"},
+        {"name": "Replace Office Location", "script": "Entra/Replace-OfficeLocation.ps1"},
         {"name": "Set Department/Office by Street Address", "script": "Entra/Set-DepartmentOfficeByStreetAddress.ps1"},
         {"name": "Set Manager by Street Address", "script": "Entra/Set-ManagerByStreetAddress.ps1"},
         {"name": "Import Entra Users", "script": "Entra/Import-EntraUsers.ps1"},
@@ -22,7 +47,7 @@ SCRIPT_CATEGORIES: dict[str, list[dict[str, str]]] = {
         {"name": "Check Department Keywords", "script": "Entra/Check-DepartmentKeywords.ps1"},
     ],
     "Exchange": [
-        {"name": "Find Alias Mailbox", "script": "Exchange/Find-AliasMailbox.ps1"},
+        {"name": "Find Alias Mailbox", "script": "Exchange/Find-Aliasmailbox.ps1"},
         {"name": "Export DL Members", "script": "Exchange/Export-DLMembers.ps1"},
         {"name": "Import DL Members", "script": "Exchange/Import-DLMembers.ps1"},
         {"name": "Import DL Members from CSV", "script": "Exchange/Import-DLMembersFromCSV.ps1"},
@@ -30,6 +55,8 @@ SCRIPT_CATEGORIES: dict[str, list[dict[str, str]]] = {
         {"name": "Get User Distribution Lists", "script": "Exchange/Get-UserDistributionLists.ps1"},
         {"name": "Get Room Mailbox Settings", "script": "Exchange/Get-RoomMailboxSettings.ps1"},
         {"name": "Get Shared Mailboxes from User", "script": "Exchange/Get-SharedMailboxesFromUser.ps1"},
+        {"name": "Compare UPN and Primary Email", "script": "Exchange/Compare-UPNandPrimaryEmail.ps1"},
+        {"name": "New Dynamic Distribution List", "script": "Exchange/New-DynamicDistributionList.ps1"},
     ],
     "Licenses": [
         {"name": "Get Dynamics Licenses for Users", "script": "Licenses/Get-DynamicsLicensesForUsers.ps1"},

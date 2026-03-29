@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 import customtkinter as ctk
 
-from script_registry import REQUIRED_MODULES
+from script_registry import REQUIRED_MODULES, find_pwsh
 
 
 @dataclass
@@ -21,7 +21,7 @@ class ModuleChecker:
     """Check and manage required PowerShell modules."""
 
     def __init__(self):
-        self.pwsh_path: str | None = shutil.which("pwsh")
+        self.pwsh_path: str | None = find_pwsh()
         self.modules: list[ModuleStatus] = [
             ModuleStatus(name=m) for m in REQUIRED_MODULES
         ]
