@@ -3,6 +3,7 @@
 
 # Check and install required modules
 Clear-Host
+Write-Host "Welcome to Servicedesk Tools, checking modules and updating if necessary..." -ForegroundColor Green
 Write-Host "Checking required modules..." -ForegroundColor Cyan
 $requiredModules = @(
     "Microsoft.Graph.Users"
@@ -26,7 +27,7 @@ foreach ($module in $requiredModules) {
         Write-Host "Module '$module' is already installed." -ForegroundColor Green
     }
 }
-Write-Host "All required modules are ready!" -ForegroundColor Green
+Write-Host "All required modules are ready!" -ForegroundColor Cyan
 
 # Check for module updates
 Write-Host "`nChecking for module updates..." -ForegroundColor Cyan
@@ -110,7 +111,7 @@ while ($true) {
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
     Write-Host "======================================" -ForegroundColor Cyan
-    Write-Host "Welcome to Servicedesk Tools - An idea by Servicedesk, made by Mr.Hagen - 2025/2026" -ForegroundColor Green 
+    Write-Host "" 
     Write-Host "Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
     Write-Host "Remember that you need to have PIM activated. Recommended to activate User/Exchange PIM." -ForegroundColor Red
     Write-Host ""
@@ -144,8 +145,8 @@ while ($true) {
             Write-Host "======================================" -ForegroundColor Cyan
             Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
             Write-Host "======================================" -ForegroundColor Cyan
-            Write-Host "=== $selectedCategory Scripts ===" -ForegroundColor Yellow
             Write-Host ""
+            Write-Host "=== $selectedCategory Scripts ===" -ForegroundColor Yellow
             for ($i = 0; $i -lt $scripts.Count; $i++) {
                 Write-Host "$($i+1): $($scripts[$i].Name)"
             }
