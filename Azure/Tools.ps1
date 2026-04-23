@@ -158,8 +158,8 @@ while ($true) {
             if ($choice -eq 'back') { break }
             if ($choice -eq 'exit') { break }
             
-            if ($choice -match '^[1-9][0-9]*$' -and $choice -le $scripts.Count) {
-                $scriptToRun = $scripts[$choice-1].Path
+            if ($choice -match '^[1-9][0-9]*$' -and [int]$choice -le $scripts.Count) {
+                $scriptToRun = $scripts[[int]$choice-1].Path
                 Write-Host ""
                 Write-Host "======================================" -ForegroundColor Cyan
                 Write-Host "Running $($scripts[$choice-1].Name)..." -ForegroundColor Cyan
