@@ -40,14 +40,21 @@ $skipped = @()
 $errors = @()
 
 Write-Host "`nStarting import process..." -ForegroundColor Cyan
-
+# Start timer
+$importStartTime = Get-Date
+$currentCount = 0
 foreach ($contact in $contacts) {
+    $currentCount++
     $email = $contact.Email.Trim()
     
     if ([string]::IsNullOrWhiteSpace($email)) {
-        Write-Host "Skipping empty email address" -ForegroundColor Yellow
+        Write-Host "[$currentCount/$($contacts.Count)] Skipping empty email address" -ForegroundColor Yellow
         continue
     }
+    
+    Write-Progress -Activity "Importing External Contacts" `
+                   -Status "Processing $currentCount of $($contacts.Count): $email" `
+                   -PercentComplete (($currentCount / $contacts.Count) * 100)
     
     # Use email address as name (remove domain for display)
     $displayName = $email.Split('@')[0]
@@ -57,7 +64,7 @@ foreach ($contact in $contacts) {
         $existingContact = Get-MailContact -Identity $email -ErrorAction SilentlyContinue
         
         if ($existingContact) {
-            Write-Host "Contact already exists: $email" -ForegroundColor Yellow
+            Write-Host "[$currentCount/$($contacts.Count)] Contact already exists: $email" -ForegroundColor Yellow
             $skipped += $email
         } else {
             # Create new mail contact
@@ -67,7 +74,7 @@ foreach ($contact in $contacts) {
                            -FirstName $displayName `
                            -LastName "" | Out-Null
             
-            Write-Host "Created contact: $email" -ForegroundColor Green
+            Write-Host "[$currentCount/$($contacts.Count)] Created contact: $email" -ForegroundColor Green
             $created += $email
             
             # Hide from address book if requested
@@ -76,17 +83,25 @@ foreach ($contact in $contacts) {
             }
         }
     } catch {
-        Write-Host "Error creating contact $email : $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "[$currentCount/$($contacts.Count)] Error creating contact $email : $($_.Exception.Message)" -ForegroundColor Red
         $errors += "$email - $($_.Exception.Message)"
     }
     
     Start-Sleep -Milliseconds 500  # Small delay to avoid throttling
 }
 
+Write-Progress -Activity "Importing External Contacts" -Completed
+
+# Calculate elapsed time
+$importEndTime = Get-Date
+$elapsedTime = $importEndTime - $importStartTime
+$timeFormatted = "{0:D2}:{1:D2}:{2:D2}" -f $elapsedTime.Hours, $elapsedTime.Minutes, $elapsedTime.Seconds
+
 # Summary
 Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "Import Summary" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "`nTime elapsed: $timeFormatted (HH:MM:SS)" -ForegroundColor Cyan
 Write-Host "Successfully created: $($created.Count)" -ForegroundColor Green
 Write-Host "Already existed (skipped): $($skipped.Count)" -ForegroundColor Yellow
 Write-Host "Errors: $($errors.Count)" -ForegroundColor Red
