@@ -93,6 +93,7 @@ $scriptCategories = @{
         @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
         @{ Name = "Compare UPN and Primary Email"; Path = "$PSScriptRoot\Exchange\Compare-UPNandPrimaryEmail.ps1" }
         @{ Name = "New Dynamic Distribution List"; Path = "$PSScriptRoot\Exchange\New-DynamicDistributionList.ps1" }
+        @{ Name = "Grant Calendar Access"; Path = "$PSScriptRoot\Exchange\Grant-CalendarAccess.ps1" }
     )
     "Licenses" = @(
         @{ Name = "Get Dynamics Licenses for Users"; Path = "$PSScriptRoot\Licenses\Get-DynamicsLicensesForUsers.ps1" }
