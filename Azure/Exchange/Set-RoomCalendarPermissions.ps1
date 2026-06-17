@@ -10,7 +10,7 @@ Write-Host "Connected!" -ForegroundColor Green
 try {
     # --- Select target method ---
     Write-Host "`nHow would you like to select room mailboxes?" -ForegroundColor Yellow
-    Write-Host "[1] By domain (e.g. @kibo.dk)"
+    Write-Host "[1] By domain (e.g. @contoso.dk)"
     Write-Host "[2] Manual input (UPN separated by ',')"
     $selectionMode = Read-Host "`nEnter your choice (1 or 2)"
 

@@ -90,6 +90,7 @@ $scriptCategories = @{
         @{ Name = "Import Contacts from CSV"; Path = "$PSScriptRoot\Exchange\Import-ContactsFromCSV.ps1" }
         @{ Name = "Get User Distribution Lists"; Path = "$PSScriptRoot\Exchange\Get-UserDistributionLists.ps1" }
         @{ Name = "Get Room Mailbox Settings"; Path = "$PSScriptRoot\Exchange\Get-RoomMailboxSettings.ps1" }
+        @{ Name = "Set Room Mailbox Timezone"; Path = "$PSScriptRoot\Exchange\Set-RoomMailboxTimezone.ps1" }
         @{ Name = "Get Shared Mailboxes from User"; Path = "$PSScriptRoot\Exchange\Get-SharedMailboxesFromUser.ps1" }
         @{ Name = "Compare UPN and Primary Email"; Path = "$PSScriptRoot\Exchange\Compare-UPNandPrimaryEmail.ps1" }
         @{ Name = "New Dynamic Distribution List"; Path = "$PSScriptRoot\Exchange\New-DynamicDistributionList.ps1" }
