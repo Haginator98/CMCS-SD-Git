@@ -67,6 +67,22 @@ if ($updatesAvailable) {
     Write-Host "✓ All modules are up to date" -ForegroundColor Green
 }
 
+# Version check against GitHub
+$currentVersion = "1.2"
+Write-Host "`nChecking for script updates..." -ForegroundColor Cyan
+try {
+    $latestTag = (Invoke-RestMethod -Uri "https://api.github.com/repos/Haginator98/CMCS-SD-Git/tags" -TimeoutSec 5)[0].name
+    $latestVersion = $latestTag -replace '^v', ''
+    if ($latestVersion -gt $currentVersion) {
+        Write-Host "⚠ A newer version is available: v$latestVersion (you have v$currentVersion)" -ForegroundColor Yellow
+        Write-Host "  Update from: https://github.com/Haginator98/CMCS-SD-Git" -ForegroundColor Yellow
+    } else {
+        Write-Host "✓ You are running the latest version (v$currentVersion)" -ForegroundColor Green
+    }
+} catch {
+    Write-Host "Could not check for updates (no internet or GitHub unavailable)" -ForegroundColor Gray
+}
+
 Start-Sleep -Seconds 1
 
 # Organize scripts by category
@@ -112,19 +128,16 @@ $scriptCategories = @{
 while ($true) {
     Clear-Host
     Write-Host "======================================" -ForegroundColor Cyan
-    Write-Host "    SERVICEDESK TOOLS - V1.1" -ForegroundColor Cyan
-    Write-Host "======================================" -ForegroundColor Cyan
-    Write-Host "" 
-    Write-Host "Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
+    Write-Host "    SERVICEDESK TOOLS - V1.2" -ForegroundColor Cyan
     Write-Host "Remember that you need to have PIM activated. Recommended to activate User/Exchange PIM." -ForegroundColor Red
     Write-Host ""
     Write-Host "Select a category:" -ForegroundColor Yellow
-    Write-Host "1: Entra ID (Mostly user management)"
-    Write-Host "2: Exchange (Mailboxes and Distribution Lists)"
-    Write-Host "3: Licenses (Manage user licenses)"
-    Write-Host "4: On-Prem (Tools for on-premises Exchange environments)"
-    Write-Host "5: Teams (Teams groups and channels reporting)"
-    Write-Host "0: Exit"
+    Write-Host "1: Entra ID (Mostly user management)" -ForegroundColor Blue
+    Write-Host "2: Exchange (Mailboxes and Distribution Lists)" -ForegroundColor Magenta
+    Write-Host "3: Licenses (Manage user licenses)" -ForegroundColor DarkYellow
+    Write-Host "4: On-Prem (Tools for on-premises Exchange environments)" -ForegroundColor DarkCyan
+    Write-Host "5: Teams (Teams groups and channels reporting)" -ForegroundColor DarkMagenta
+    Write-Host "0: Exit" -ForegroundColor Gray
 
     $categoryChoice = Read-Host "Enter the number of the category"
     
@@ -146,7 +159,7 @@ while ($true) {
         while ($true) {
             Clear-Host
             Write-Host "======================================" -ForegroundColor Cyan
-            Write-Host "    SERVICEDESK TOOLS - V1.1" -ForegroundColor Cyan
+            Write-Host "    SERVICEDESK TOOLS - V1.2" -ForegroundColor Cyan
             Write-Host "======================================" -ForegroundColor Cyan
             Write-Host ""
             Write-Host "=== $selectedCategory Scripts ===" -ForegroundColor Yellow
