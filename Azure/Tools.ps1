@@ -30,58 +30,7 @@ foreach ($module in $requiredModules) {
 }
 Write-Host "All required modules are ready!" -ForegroundColor Cyan
 
-# Check for module updates
-Write-Host "`nChecking for module updates..." -ForegroundColor Cyan
-$updatesAvailable = $false
-$updateInfo = @()
-
-foreach ($module in $requiredModules) {
-    $installedModule = Get-InstalledModule -Name $module -ErrorAction SilentlyContinue
-    if ($installedModule) {
-        $onlineModule = Find-Module -Name $module -ErrorAction SilentlyContinue
-        if ($onlineModule -and ($onlineModule.Version -gt $installedModule.Version)) {
-            Write-Host "⚠ $module update available: $($installedModule.Version) → $($onlineModule.Version)" -ForegroundColor Yellow
-            $updatesAvailable = $true
-            $updateInfo += $module
-        } else {
-            Write-Host "✓ $module is up to date ($($installedModule.Version))" -ForegroundColor Green
-        }
-    }
-}
-
-if ($updatesAvailable) {
-    Write-Host "`nWould you like to update the modules now?" -ForegroundColor Yellow
-    $updateChoice = Read-Host "[Y] Yes [N] No (continue with current versions)"
-    if ($updateChoice -match "[yY]") {
-        Write-Host "Updating modules... (this may take a few minutes)" -ForegroundColor Cyan
-        foreach ($module in $updateInfo) {
-            Write-Host "Updating $module..." -ForegroundColor Gray
-            Update-Module $module -Force -ErrorAction SilentlyContinue
-        }
-        Write-Host "✓ Modules updated successfully" -ForegroundColor Green
-        Write-Host "Please restart the script to use the updated modules." -ForegroundColor Yellow
-        Start-Sleep -Seconds 3
-        Exit
-    }
-} else {
-    Write-Host "✓ All modules are up to date" -ForegroundColor Green
-}
-
-# Version check against GitHub
 $currentVersion = "1.2"
-Write-Host "`nChecking for script updates..." -ForegroundColor Cyan
-try {
-    $latestTag = (Invoke-RestMethod -Uri "https://api.github.com/repos/Haginator98/CMCS-SD-Git/tags" -TimeoutSec 5)[0].name
-    $latestVersion = $latestTag -replace '^v', ''
-    if ($latestVersion -gt $currentVersion) {
-        Write-Host "⚠ A newer version is available: v$latestVersion (you have v$currentVersion)" -ForegroundColor Yellow
-        Write-Host "  Update from: https://github.com/Haginator98/CMCS-SD-Git" -ForegroundColor Yellow
-    } else {
-        Write-Host "✓ You are running the latest version (v$currentVersion)" -ForegroundColor Green
-    }
-} catch {
-    Write-Host "Could not check for updates (no internet or GitHub unavailable)" -ForegroundColor Gray
-}
 
 Start-Sleep -Seconds 1
 
@@ -129,6 +78,7 @@ while ($true) {
     Clear-Host
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "    SERVICEDESK TOOLS - V1.2" -ForegroundColor Cyan
+    Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "Remember that you need to have PIM activated. Recommended to activate User/Exchange PIM." -ForegroundColor Red
     Write-Host ""
     Write-Host "Select a category:" -ForegroundColor Yellow
@@ -137,12 +87,75 @@ while ($true) {
     Write-Host "3: Licenses (Manage user licenses)" -ForegroundColor DarkYellow
     Write-Host "4: On-Prem (Tools for on-premises Exchange environments)" -ForegroundColor DarkCyan
     Write-Host "5: Teams (Teams groups and channels reporting)" -ForegroundColor DarkMagenta
+    Write-Host ""
+    Write-Host "9: Check for updates (modules & script version)" -ForegroundColor Green
     Write-Host "0: Exit" -ForegroundColor Gray
 
     $categoryChoice = Read-Host "Enter the number of the category"
     
     if ($categoryChoice -eq '0') { break }
     if ($categoryChoice -eq 'exit') { break }
+
+    if ($categoryChoice -eq '9') {
+        Clear-Host
+        Write-Host "======================================" -ForegroundColor Cyan
+        Write-Host "    CHECK FOR UPDATES" -ForegroundColor Cyan
+        Write-Host "======================================" -ForegroundColor Cyan
+        Write-Host ""
+
+        # Script version check
+        Write-Host "Checking for script updates..." -ForegroundColor Cyan
+        try {
+            $latestTag = (Invoke-RestMethod -Uri "https://api.github.com/repos/Haginator98/CMCS-SD-Git/tags" -TimeoutSec 5)[0].name
+            $latestVersion = $latestTag -replace '^v', ''
+            if ($latestVersion -gt $currentVersion) {
+                Write-Host "⚠ A newer version is available: v$latestVersion (you have v$currentVersion)" -ForegroundColor Yellow
+                Write-Host "  Update from: https://github.com/Haginator98/CMCS-SD-Git" -ForegroundColor Yellow
+            } else {
+                Write-Host "✓ You are running the latest version (v$currentVersion)" -ForegroundColor Green
+            }
+        } catch {
+            Write-Host "Could not check for script updates (no internet or GitHub unavailable)" -ForegroundColor Gray
+        }
+
+        # Module update check
+        Write-Host "`nChecking for module updates..." -ForegroundColor Cyan
+        $updatesAvailable = $false
+        $updateInfo = @()
+
+        foreach ($module in $requiredModules) {
+            $installedModule = Get-InstalledModule -Name $module -ErrorAction SilentlyContinue
+            if ($installedModule) {
+                $onlineModule = Find-Module -Name $module -ErrorAction SilentlyContinue
+                if ($onlineModule -and ($onlineModule.Version -gt $installedModule.Version)) {
+                    Write-Host "⚠ $module update available: $($installedModule.Version) → $($onlineModule.Version)" -ForegroundColor Yellow
+                    $updatesAvailable = $true
+                    $updateInfo += $module
+                } else {
+                    Write-Host "✓ $module is up to date ($($installedModule.Version))" -ForegroundColor Green
+                }
+            }
+        }
+
+        if ($updatesAvailable) {
+            Write-Host "`nWould you like to update the modules now?" -ForegroundColor Yellow
+            $updateChoice = Read-Host "[Y] Yes [N] No"
+            if ($updateChoice -match "[yY]") {
+                Write-Host "Updating modules... (this may take a few minutes)" -ForegroundColor Cyan
+                foreach ($module in $updateInfo) {
+                    Write-Host "Updating $module..." -ForegroundColor Gray
+                    Update-Module $module -Force -ErrorAction SilentlyContinue
+                }
+                Write-Host "✓ Modules updated successfully" -ForegroundColor Green
+            }
+        } else {
+            Write-Host "✓ All modules are up to date" -ForegroundColor Green
+        }
+
+        Write-Host "`nPress any key to return to menu..." -ForegroundColor Yellow
+        $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+        continue
+    }
 
     $selectedCategory = switch ($categoryChoice) {
         '1' { "Entra" }
