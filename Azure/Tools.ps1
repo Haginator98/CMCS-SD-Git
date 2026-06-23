@@ -7,6 +7,7 @@ Write-Host "Welcome to Servicedesk Tools, checking modules and updating if neces
 Write-Host "Checking required modules..." -ForegroundColor Cyan
 $requiredModules = @(
     "Microsoft.Graph.Users"
+    "Microsoft.Graph.Users.Actions"
     "Microsoft.Graph.Identity.DirectoryManagement"
     "Microsoft.Graph.Authentication"
     "ExchangeOnlineManagement"
@@ -111,7 +112,7 @@ $scriptCategories = @{
 while ($true) {
     Clear-Host
     Write-Host "======================================" -ForegroundColor Cyan
-    Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
+    Write-Host "    SERVICEDESK TOOLS - V1.1" -ForegroundColor Cyan
     Write-Host "======================================" -ForegroundColor Cyan
     Write-Host "" 
     Write-Host "Please let Alexander Hagen know if there are any issues." -ForegroundColor Yellow
@@ -145,7 +146,7 @@ while ($true) {
         while ($true) {
             Clear-Host
             Write-Host "======================================" -ForegroundColor Cyan
-            Write-Host "    SERVICEDESK TOOLS - V1.0" -ForegroundColor Cyan
+            Write-Host "    SERVICEDESK TOOLS - V1.1" -ForegroundColor Cyan
             Write-Host "======================================" -ForegroundColor Cyan
             Write-Host ""
             Write-Host "=== $selectedCategory Scripts ===" -ForegroundColor Yellow
