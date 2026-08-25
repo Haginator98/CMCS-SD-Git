@@ -4,12 +4,11 @@ Kinda done, browser login prompt - enter user credentials to login
 Done - auto disconnect from Azure
 done - clear host after exit 
 
-- Add text letting user know that PIM needs to be activated
+Done - Add text letting user know that PIM needs to be activated
 
-- auto import modules?
+Done - auto import modules?
 - Change license group / add or remove
-- Add / remove distribution list x1
-- Recover script legges inn?
+Done - Add / remove distribution list x1
 - Om feilmelding i script, generer text fil med feilmelding
 - Create distribution list
 - Create dynamic distribution list (emil)
