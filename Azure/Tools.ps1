@@ -177,7 +177,8 @@ while ($true) {
     }
 
     if ($selectedCategory -and $scriptCategories.ContainsKey($selectedCategory)) {
-        $scripts = $scriptCategories[$selectedCategory] | Sort-Object Name
+        # Wrap in @() so a category with exactly one script isn't unwrapped into a bare Hashtable
+        $scripts = @($scriptCategories[$selectedCategory] | Sort-Object Name)
         
         while ($true) {
             Clear-Host
