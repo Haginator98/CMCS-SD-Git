@@ -8,6 +8,7 @@ Write-Host "Checking required modules..." -ForegroundColor Cyan
 $requiredModules = @(
     "Microsoft.Graph.Users"
     "Microsoft.Graph.Users.Actions"
+    "Microsoft.Graph.Groups"
     "Microsoft.Graph.Identity.DirectoryManagement"
     "Microsoft.Graph.Authentication"
     "ExchangeOnlineManagement"
@@ -46,6 +47,7 @@ $scriptCategories = @{
         @{ Name = "Export Filtered Entra Users"; Path = "$PSScriptRoot\Entra\Export-FilteredEntraUsers.ps1" }
         @{ Name = "Check Department Keywords"; Path = "$PSScriptRoot\Entra\Check-DepartmentKeywords.ps1" }
         @{ Name = "Replace Office Location"; Path = "$PSScriptRoot\Entra\Replace-OfficeLocation.ps1" }
+        @{ Name = "Remove Entra Group Members"; Path = "$PSScriptRoot\Entra\Remove-EntraGroupMembers.ps1" }
         
     )    
     "Exchange" = @(
@@ -65,12 +67,18 @@ $scriptCategories = @{
     "Licenses" = @(
         @{ Name = "Get Dynamics Licenses for Users"; Path = "$PSScriptRoot\Licenses\Get-DynamicsLicensesForUsers.ps1" }
         @{ Name = "Remove Direct User License"; Path = "$PSScriptRoot\Licenses\Remove-DirectUserLicense.ps1" }
+        @{ Name = "Get User Licenses"; Path = "$PSScriptRoot\Licenses\Get-UserLicenses.ps1" }
+        @{ Name = "Remove Direct User Licenses (Bulk/CSV)"; Path = "$PSScriptRoot\Licenses\Remove-DirectUserLicenses.ps1" }
     )
     "Teams" = @(
         @{ Name = "Teams Reporting Tool"; Path = "$PSScriptRoot\Teams\Teams-Reporting.ps1" }
     )
     "On-Prem" = @(
         @{ Name = "Convert On-Prem DL to Cloud"; Path = "$PSScriptRoot\On-Prem\Convert-OnPremDLToCloud.ps1" }
+        @{ Name = "Get DL Source Overview"; Path = "$PSScriptRoot\On-Prem\Get-DLSourceOverview.ps1" }
+    )
+    "PowerShell Fixes" = @(
+        @{ Name = "Remove Duplicate Module Versions"; Path = "$PSScriptRoot\PowerShell Fixes\Remove-DuplicateModuleVersions.ps1" }
     )
 }
 
@@ -87,6 +95,7 @@ while ($true) {
     Write-Host "3: Licenses (Manage user licenses)" -ForegroundColor DarkYellow
     Write-Host "4: On-Prem (Tools for on-premises Exchange environments)" -ForegroundColor DarkCyan
     Write-Host "5: Teams (Teams groups and channels reporting)" -ForegroundColor DarkMagenta
+    Write-Host "6: PowerShell Fixes (Module/version maintenance tools)" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host "9: Check for updates (modules & script version)" -ForegroundColor Green
     Write-Host "0: Exit" -ForegroundColor Gray
@@ -163,6 +172,7 @@ while ($true) {
         '3' { "Licenses" }
         '4' { "On-Prem" }
         '5' { "Teams" }
+        '6' { "PowerShell Fixes" }
         default { $null }
     }
 
