@@ -9,13 +9,23 @@ Write-Host "This script will help you find mailboxes based on an alias." -Foregr
 $Alias = Read-Host "Enter the alias address to search (without domain, e.g. 'jdoe')"
 
 # Search for the mailbox with the alias
-$Mailboxes = Get-Recipient -ResultSize Unlimited | Where-Object {
-    $_.EmailAddresses -match "SMTP:$Alias@"
+Write-Host "Retrieving recipients from Exchange Online..." -ForegroundColor Cyan
+$AllRecipients = Get-Recipient -ResultSize Unlimited
+$Total = $AllRecipients.Count
+$Mailboxes = @()
+$i = 0
+foreach ($Recipient in $AllRecipients) {
+    $i++
+    Write-Progress -Activity "Searching for alias '$Alias'" -Status "Checking recipient $i of $Total" -PercentComplete (($i / $Total) * 100)
+    if ($Recipient.EmailAddresses -match "SMTP:$Alias@") {
+        $Mailboxes += $Recipient
+    }
 }
+Write-Progress -Activity "Searching for alias '$Alias'" -Completed
 
 if ($Mailboxes) {
     Write-Host "Mailboxes matching alias '$Alias':"
-    $Mailboxes | Select-Object Name,RecipientType,EmailAddresses | Format-Table -AutoSize
+    $Mailboxes | Select-Object Name,RecipientType,ExternalDirectoryObjectId,EmailAddresses | Format-Table -AutoSize
     $null = Read-Host "Press Enter to confirm you have read the information"
 } else {
     Write-Host "No mailbox found with alias '$Alias'"
