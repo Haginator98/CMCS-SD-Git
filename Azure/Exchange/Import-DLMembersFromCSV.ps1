@@ -75,7 +75,7 @@ $importStartTime = Get-Date
 $currentCount = 0
 foreach ($member in $members) {
     $currentCount++
-    $email = $member.Email.Trim()
+    $email = $member.Email.Trim().Trim(';')
     
     if ([string]::IsNullOrWhiteSpace($email)) {
         Write-Host "[$currentCount/$($members.Count)] Skipping empty email address" -ForegroundColor Yellow
